@@ -8,15 +8,17 @@ namespace MedicalQuiz.DatabaseModels
     [Table("Answers")]
     public class Answer
     {
-        //[Key]
-        //[Required]
+        [Key]
+        [Required]
         public int AnswerId { get; set; }
 
         //public int QuestionId;
+        [Required]
         public string Text { get; set; }
         public bool Correct { get; set; }
- 
-        public Question Question { get; set; }
+
+        //[Required]
+        //public Question Question { get; set; }
 
     }
 }

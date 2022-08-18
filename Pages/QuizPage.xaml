@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Quiz.Pages.QuizPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Quiz.CustomControls"
+    Title="QuizPage">
+    <VerticalStackLayout>
+        <Label
+            x:Name="LabelQuestion"
+            HorizontalOptions="Center"
+            Text="Welcome to .NET MAUI!"
+            VerticalOptions="Center" />
+        <VerticalStackLayout>
+            <Label x:Name="labelCorrectAnswers" />
+            <local:ButtonAnswer
+                x:Name="ans1"
+                Clicked="buttonAnswerClick"
+                FontSize="18"
+                Text="Answer 1">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="ToggledOff">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="DarkSalmon" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="ToggledOn">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="green" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </local:ButtonAnswer>
+            <local:ButtonAnswer
+                x:Name="ans2"
+                Clicked="buttonAnswerClick"
+                FontSize="18"
+                Text="Answer 1">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="ToggledOff">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="DarkSalmon" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="ToggledOn">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="green" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </local:ButtonAnswer>
+
+            <local:ButtonAnswer
+                x:Name="ans3"
+                Clicked="buttonAnswerClick"
+                FontSize="18"
+                Text="Answer 1">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="ToggledOff">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="DarkSalmon" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="ToggledOn">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="green" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </local:ButtonAnswer>
+
+            <local:ButtonAnswer
+                x:Name="ans4"
+                Clicked="buttonAnswerClick"
+                FontSize="18"
+                Text="Answer 1">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="ToggledOff">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="DarkSalmon" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="ToggledOn">
+                            <VisualState.Setters>
+                                <Setter Property="Background" Value="green" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </local:ButtonAnswer>
+
+        </VerticalStackLayout>
+        <Button
+            x:Name="buttonNextQuestion"
+            Background="Green"
+            Clicked="buttonNextQuestion_Clicked"
+            Text="&gt;" />
+    </VerticalStackLayout>
+</ContentPage>

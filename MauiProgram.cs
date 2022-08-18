@@ -8,7 +8,7 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var quizContext = new QuizContext();
-        quizContext.PopulateDB(@"C:\Users\andreio\Source\Repos\MedicalQuiz\MedicalQuiz\Resources\Raw\Questions.txt", @"C:\Users\andreio\Source\Repos\MedicalQuiz\MedicalQuiz\Resources\Raw\GoodAnswers.txt");
+        
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()

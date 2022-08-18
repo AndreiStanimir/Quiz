@@ -14,6 +14,8 @@ namespace MedicalQuiz.DatabaseModels
         [Key]
         public int Id { get; set; }
         public string Text { get; set; }
-        public virtual ICollection<Answer> Answers { get; set; }
+
+        [Required,MinLength(1),MaxLength(4)]
+        public ICollection<Answer> Answers { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Quiz;
+﻿using Quiz.Pages;
+
+namespace Quiz;
 
 public partial class MainPage : ContentPage
 {
@@ -7,6 +9,7 @@ public partial class MainPage : ContentPage
 	public MainPage()
 	{
 		InitializeComponent();
+		Navigation.PushAsync(new QuizPage());
 	}
 
 	private void OnCounterClicked(object sender, EventArgs e)

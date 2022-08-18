@@ -1,6 +1,6 @@
 ﻿using MedicalQuiz.DatabaseModels;
 using Microsoft.EntityFrameworkCore;
-
+ 
 namespace MedicalQuiz.Models;
 
 public class QuizContext : DbContext
@@ -23,8 +23,9 @@ public class QuizContext : DbContext
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
-        DbPath = System.IO.Path.Join(path, "quizes.db");
+        DbPath = System.IO.Path.Join(path, "quizes1.db");
         Database.EnsureCreated();
+        PopulateDB(@"C:\Users\andreio\Source\Repos\MedicalQuiz\MedicalQuiz\Resources\Raw\Questions.txt", @"C:\Users\andreio\Source\Repos\MedicalQuiz\MedicalQuiz\Resources\Raw\GoodAnswers.txt");
     }
 
     // The following configures EF to create a Sqlite database file in the
@@ -40,6 +41,9 @@ public class QuizContext : DbContext
         var correctAnswers = File.ReadAllText(pathAnswers).Split('\n')
             .Take(53)
             .Select(line => line.Trim().Split(" "));
+        Questions.RemoveRange(Questions);
+        Answers.RemoveRange(Answers);
+        SaveChanges(); 
         Dictionary<int, string> correctAnswersDic = new Dictionary<int, string>();
         foreach (var correctAnswer in correctAnswers)
         {
@@ -52,24 +56,29 @@ public class QuizContext : DbContext
                 .Where(a => !string.IsNullOrWhiteSpace(a));
             if (answers.Count() <= 1)
                 continue;
+            var questionAnswers = answers.Skip(1)
+         .Select(answer => new Answer
+         {
+             //AnswerId=++id,
+             //Question = question,
+             Text = answer,
+             Correct = correctAnswersDic[id].Contains(answer.First())
+         });
             Question question = new Question()
             {
                 //Id = id.ToString(),
                 Text = answers.First(),
-            };
-            Answers.AddRange(
-            answers.Skip(1)
-            .Select(answer => new Answer
-            {
-                //AnswerId=++id,
-                Question = question,
-                Text = answer,
-                Correct = correctAnswersDic[id].Contains(answer.First())
-            }));
+                Answers = new List<Answer>(questionAnswers.ToArray())
+           };
+            //questionAnswers.ToList().ForEach(a=>a.Question=question);
+            Answers.AddRange(question.Answers);
+            //this.SaveChanges();
             Questions.Add(question);
-            
+            //this.SaveChanges();
+
         }
         id++;
-        this.SaveChanges();
+        this.BulkSaveChanges();
     }
+ 
 }
