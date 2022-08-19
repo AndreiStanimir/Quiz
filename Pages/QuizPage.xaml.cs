@@ -2,52 +2,43 @@ using MedicalQuiz.DatabaseModels;
 using MedicalQuiz.Models;
 using Microsoft.EntityFrameworkCore;
 using Quiz.CustomControls;
+using Quiz.ViewModels;
 
 namespace Quiz.Pages;
 
 public partial class QuizPage : ContentPage
 {
-    QuizContext quizContext;
     ButtonAnswer[] buttonsAnswers;
-    Question currentQuestion;
-    ICollection<Question> questions;
-    private int correctAnswers;
 
-    public int CorrectAnswers
-    {
-        get { return correctAnswers; }
-        set
-        {
-            if (correctAnswers != value)
-            {
-                correctAnswers = value;
-                OnPropertyChanged("CorrectAnswers");
-            }
-        }
-    }
-
+    //QuizViewModel viewModel
+    //{
+    //    get =>
+    //        (QuizViewModel)this.BindingContext;
+    //}
     int wrongAnswers;
     public QuizPage()
     {
         InitializeComponent();
-        quizContext = new QuizContext();
+        //BindingContext = new QuizViewModel();
+        ViewModel = new QuizViewModel();
         buttonsAnswers = new[] { ans1, ans2, ans3, ans4 };
-        questions = quizContext.Questions.ToList();
-        CorrectAnswers = 0;
+
 
         labelCorrectAnswers.SetBinding(ContentProperty, new Binding("CorrectAnswers"));
+        //ans1.SetBinding(ContentProperty, new Binding())
         GetNextQuestion();
 
     }
     void GetNextQuestion()
     {
-        var question = questions.First();
-        questions.Remove(question);
+        ViewModel.GetNextQuestion();
+        var question = ViewModel.CurrentQuestion;
         var answers = question.Answers.ToArray();
         LabelQuestion.Text = question.Text;
         for (int i = 0; i < answers.Length; i++)
         {
-            buttonsAnswers[i].Text = question.Answers.ElementAt(i).Text;
+            //buttonsAnswers[i].SetBinding(ButtonAnswer.)
+            buttonsAnswers[i].BindingContext = question.Answers.ElementAt(i).Text;
             buttonsAnswers[i].IsSelected = false;
             buttonsAnswers[i].Correct = question.Answers.ElementAt(i).Correct;
             //buttonsAnswers[i].tag)
@@ -56,7 +47,6 @@ public partial class QuizPage : ContentPage
         {
             buttonsAnswers[i].IsVisible = false;
         }
-        currentQuestion = question;
     }
 
     void buttonAnswerClick(object sender, EventArgs e)
@@ -69,7 +59,7 @@ public partial class QuizPage : ContentPage
     {
         var correctAnswer = buttonsAnswers.All(b => b.IsSelected == b.Correct);
         if (correctAnswer)
-            CorrectAnswers++;
+            ViewModel.CorrectAnswers++;
         GetNextQuestion();
     }
 }

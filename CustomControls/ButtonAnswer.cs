@@ -13,18 +13,17 @@ namespace Quiz.CustomControls
         public static BindableProperty IsToggledProperty =
             BindableProperty.Create("IsToggled", typeof(bool), typeof(ButtonAnswer), false,
                                     propertyChanged: OnIsToggledChanged);
-
         public ButtonAnswer()
         {
             Clicked += (sender, args) => IsSelected ^= true;
         }
 
+        
         public bool IsSelected
         {
             set { SetValue(IsToggledProperty, value); }
             get { return (bool)GetValue(IsToggledProperty); }
         }
-
         public bool Correct { get; internal set; }
 
         protected override void OnParentSet()
