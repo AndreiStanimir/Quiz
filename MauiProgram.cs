@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Maui;
-using MedicalQuiz.Models;
+using Quiz.Models;
 
 namespace Quiz;
 

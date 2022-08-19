@@ -1,13 +1,14 @@
-﻿using MedicalQuiz.DatabaseModels;
+﻿using Quiz.DatabaseModels;
 using Microsoft.EntityFrameworkCore;
- 
-namespace MedicalQuiz.Models;
+
+namespace Quiz.Models;
 
 public class QuizContext : DbContext
 {
     public DbSet<Question> Questions { get; set; }
     public DbSet<Answer> Answers { get; set; }
 
+    //public DbSet<Quiz> Quizzes { get; set; }
     public string DbPath { get; }
 
     //protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,7 +27,20 @@ public class QuizContext : DbContext
         DbPath = System.IO.Path.Join(path, "quizes1.db");
         Database.EnsureCreated();
         PopulateDB(@"C:\Users\andreio\Source\Repos\MedicalQuiz\MedicalQuiz\Resources\Raw\Questions.txt", @"C:\Users\andreio\Source\Repos\MedicalQuiz\MedicalQuiz\Resources\Raw\GoodAnswers.txt");
+        GenerateQuizes();
     }
+
+    private void GenerateQuizes()
+    {
+        //List<Question> questions = Questions.ToList();
+        //questions.Shuffle();
+        //while (true)
+        //{
+
+        //}
+        //questions.Sort(p => 1<new Guid());
+    }
+
 
     // The following configures EF to create a Sqlite database file in the
     // special "local" folder for your platform.
@@ -41,9 +55,10 @@ public class QuizContext : DbContext
         var correctAnswers = File.ReadAllText(pathAnswers).Split('\n')
             .Take(53)
             .Select(line => line.Trim().Split(" "));
-        Questions.RemoveRange(Questions);
-        Answers.RemoveRange(Answers);
-        SaveChanges(); 
+        this.BulkDelete(Questions);
+        this.BulkDelete(Answers);
+
+        SaveChanges();
         Dictionary<int, string> correctAnswersDic = new Dictionary<int, string>();
         foreach (var correctAnswer in correctAnswers)
         {
@@ -69,7 +84,7 @@ public class QuizContext : DbContext
                 //Id = id.ToString(),
                 Text = answers.First(),
                 Answers = new List<Answer>(questionAnswers.ToArray())
-           };
+            };
             //questionAnswers.ToList().ForEach(a=>a.Question=question);
             Answers.AddRange(question.Answers);
             //this.SaveChanges();
@@ -80,5 +95,21 @@ public class QuizContext : DbContext
         id++;
         this.BulkSaveChanges();
     }
- 
+
+}
+static class ExtensionsClass
+{
+    public static void Shuffle<T>(this IList<T> list)
+    {
+        System.Random rng = new System.Random(Environment.TickCount);
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
+    }
 }

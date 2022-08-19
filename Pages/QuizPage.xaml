@@ -9,15 +9,19 @@
     <ContentPage.BindingContext>
         <local2:QuizViewModel x:Name="ViewModel" />
     </ContentPage.BindingContext>
+    <!--<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"></RowDefinition>
+        </Grid.RowDefinitions>
+    </Grid>-->
     <VerticalStackLayout>
         <Label
             x:Name="LabelQuestion"
             HorizontalOptions="Center"
-            Text="Welcome to .NET MAUI!"
+            Text="{Binding CurrentQuestion.Text}"
             VerticalOptions="Center" />
         <VerticalStackLayout>
-            <Label x:Name="labelCorrectAnswers" 
-                   Text="{Binding CorrectAnswers}"/>
+            <Label x:Name="labelCorrectAnswers" Text="{Binding CorrectAnswers, StringFormat=Correct\ Answers: {0}}" />
             <local:ButtonAnswer
                 x:Name="ans1"
                 Clicked="buttonAnswerClick"
@@ -106,6 +110,8 @@
             x:Name="buttonNextQuestion"
             Background="Green"
             Clicked="buttonNextQuestion_Clicked"
-            Text="&gt;" />
+            HorizontalOptions="End"
+            Text="&gt;"
+            VerticalOptions="End" />
     </VerticalStackLayout>
 </ContentPage>

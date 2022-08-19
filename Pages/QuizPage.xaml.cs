@@ -1,5 +1,5 @@
-using MedicalQuiz.DatabaseModels;
-using MedicalQuiz.Models;
+using Quiz.DatabaseModels;
+using Quiz.Models;
 using Microsoft.EntityFrameworkCore;
 using Quiz.CustomControls;
 using Quiz.ViewModels;
@@ -21,10 +21,14 @@ public partial class QuizPage : ContentPage
         InitializeComponent();
         //BindingContext = new QuizViewModel();
         ViewModel = new QuizViewModel();
+        BindingContext = ViewModel;
         buttonsAnswers = new[] { ans1, ans2, ans3, ans4 };
 
-
-        labelCorrectAnswers.SetBinding(ContentProperty, new Binding("CorrectAnswers"));
+        foreach (var button in buttonsAnswers)
+        {
+            button.SetBinding(Button.TextProperty,new Binding())
+        }
+        //labelCorrectAnswers.SetBinding(ContentProperty, new Binding("CorrectAnswers"));
         //ans1.SetBinding(ContentProperty, new Binding())
         GetNextQuestion();
 
@@ -34,7 +38,7 @@ public partial class QuizPage : ContentPage
         ViewModel.GetNextQuestion();
         var question = ViewModel.CurrentQuestion;
         var answers = question.Answers.ToArray();
-        LabelQuestion.Text = question.Text;
+        //LabelQuestion.Text = question.Text;
         for (int i = 0; i < answers.Length; i++)
         {
             //buttonsAnswers[i].SetBinding(ButtonAnswer.)
