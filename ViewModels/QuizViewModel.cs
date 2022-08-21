@@ -1,6 +1,9 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Core.Extensions;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Quiz.DatabaseModels;
 using Quiz.Models;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace Quiz.ViewModels
@@ -13,8 +16,7 @@ namespace Quiz.ViewModels
         ICollection<Question> questions;
         [ObservableProperty]
         private int correctAnswers;
-
-        
+       
 
         public QuizViewModel()
         {
@@ -24,12 +26,14 @@ namespace Quiz.ViewModels
             CorrectAnswers = 0;
         }
 
+        [RelayCommand]
         public void GetNextQuestion()
         {
             CorrectAnswers++;
             questions.Remove(questions.First());
             CurrentQuestion = questions.First();
+            //Answers = currentQuestion.Answers;
         }
-      
+
     }
 }

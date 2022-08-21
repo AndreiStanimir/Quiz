@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -19,6 +20,6 @@ namespace Quiz.DatabaseModels
 
        // [Required, MinLength(1), MaxLength(4)]
         [ObservableProperty]
-        private ICollection<Answer> answers;
+        private ObservableCollection<Answer> answers;
     }
 }

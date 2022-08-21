@@ -24,9 +24,9 @@ public class QuizContext : DbContext
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
-        DbPath = System.IO.Path.Join(path, "quizes1.db");
+        DbPath = System.IO.Path.Combine(FileSystem.AppDataDirectory, "quizes.db");
         Database.EnsureCreated();
-        PopulateDB(@"C:\Users\andreio\Source\Repos\MedicalQuiz\MedicalQuiz\Resources\Raw\Questions.txt", @"C:\Users\andreio\Source\Repos\MedicalQuiz\MedicalQuiz\Resources\Raw\GoodAnswers.txt");
+        PopulateDB(@"C:\Users\andreio\Documents\Visual Studio 2022\Projects\Quiz\Quiz\Resources\Raw\Questions.txt", @"C:\Users\andreio\Documents\Visual Studio 2022\Projects\Quiz\Quiz\Resources\Raw\GoodAnswers.txt");
         GenerateQuizes();
     }
 
@@ -50,16 +50,17 @@ public class QuizContext : DbContext
     public void PopulateDB(string pathQuestions, string pathAnswers)
     {
         string text = File.ReadAllText(pathQuestions);
-        var questionsWithAnswers = System.Text.RegularExpressions.Regex.Split(text, @"\n\d+\.").Take(50);
+        var questionsWithAnswers = System.Text.RegularExpressions.Regex.Split(text, @"\n\d+\.")
+            .Take(50);
         int id = 1;
         var correctAnswers = File.ReadAllText(pathAnswers).Split('\n')
             .Take(53)
             .Select(line => line.Trim().Split(" "));
-        this.BulkDelete(Questions);
         this.BulkDelete(Answers);
+        this.BulkDelete(Questions);
 
         SaveChanges();
-        Dictionary<int, string> correctAnswersDic = new Dictionary<int, string>();
+        Dictionary<int, string> correctAnswersDic = new Dictionary<int, string>(correctAnswers.Count());
         foreach (var correctAnswer in correctAnswers)
         {
             correctAnswersDic[int.Parse(correctAnswer[0].Trim())] = correctAnswer[1].Trim();
@@ -83,7 +84,7 @@ public class QuizContext : DbContext
             {
                 //Id = id.ToString(),
                 Text = answers.First(),
-                Answers = new List<Answer>(questionAnswers.ToArray())
+                Answers = new System.Collections.ObjectModel.ObservableCollection<Answer>(questionAnswers.ToArray())
             };
             //questionAnswers.ToList().ForEach(a=>a.Question=question);
             Answers.AddRange(question.Answers);

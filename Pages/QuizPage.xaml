@@ -4,10 +4,10 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Quiz.CustomControls"
-    xmlns:local2="clr-namespace:Quiz.ViewModels"
+    xmlns:viewmodel="clr-namespace:Quiz.ViewModels"
     Title="QuizPage">
     <ContentPage.BindingContext>
-        <local2:QuizViewModel x:Name="ViewModel" />
+        <viewmodel:QuizViewModel x:Name="ViewModel" />
     </ContentPage.BindingContext>
     <!--<Grid>
         <Grid.RowDefinitions>
@@ -22,94 +22,38 @@
             VerticalOptions="Center" />
         <VerticalStackLayout>
             <Label x:Name="labelCorrectAnswers" Text="{Binding CorrectAnswers, StringFormat=Correct\ Answers: {0}}" />
-            <local:ButtonAnswer
-                x:Name="ans1"
-                Clicked="buttonAnswerClick"
-                FontSize="18"
-                Text="Answer 1">
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="ToggledOff">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="DarkSalmon" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="ToggledOn">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="green" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateManager.VisualStateGroups>
-            </local:ButtonAnswer>
-            <local:ButtonAnswer
-                x:Name="ans2"
-                Clicked="buttonAnswerClick"
-                FontSize="18"
-                Text="Answer 1">
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="ToggledOff">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="DarkSalmon" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="ToggledOn">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="green" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateManager.VisualStateGroups>
-            </local:ButtonAnswer>
+            <CollectionView
+                x:Name="listViewAnswers"
+                ItemsSource="{x:Binding CurrentQuestion.Answers}"
+                SelectionMode="Multiple">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label FontSize="18" Text="{Binding Text}">
+                            <!--<VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="ToggledOff">
+                                        <VisualState.Setters>
+                                            <Setter Property="Background" Value="DarkSalmon" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="ToggledOn">
+                                        <VisualState.Setters>
+                                            <Setter Property="Background" Value="green" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>-->
+                        </Label>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-            <local:ButtonAnswer
-                x:Name="ans3"
-                Clicked="buttonAnswerClick"
-                FontSize="18"
-                Text="Answer 1">
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="ToggledOff">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="DarkSalmon" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="ToggledOn">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="green" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateManager.VisualStateGroups>
-            </local:ButtonAnswer>
-
-            <local:ButtonAnswer
-                x:Name="ans4"
-                Clicked="buttonAnswerClick"
-                FontSize="18"
-                Text="Answer 1">
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="ToggledOff">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="DarkSalmon" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="ToggledOn">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="green" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateManager.VisualStateGroups>
-            </local:ButtonAnswer>
 
         </VerticalStackLayout>
         <Button
             x:Name="buttonNextQuestion"
             Background="Green"
-            Clicked="buttonNextQuestion_Clicked"
+            Command="{Binding GetNextQuestionCommand}"
             HorizontalOptions="End"
             Text="&gt;"
             VerticalOptions="End" />
