@@ -27,7 +27,9 @@ public class QuizContext : DbContext
         DbPath = System.IO.Path.Combine(FileSystem.AppDataDirectory, "quizes.db");
         Database.EnsureCreated();
         PopulateDB(@"C:\Users\andreio\Documents\Visual Studio 2022\Projects\Quiz\Quiz\Resources\Raw\Questions.txt", @"C:\Users\andreio\Documents\Visual Studio 2022\Projects\Quiz\Quiz\Resources\Raw\GoodAnswers.txt");
-        Quizzes.AddRange(GenerateQuizes(Questions.ToList(),7));
+        Quizzes.BulkInsert(GenerateQuizes(Questions.ToList(),7));
+        //SaveChanges();
+        this.BulkSaveChanges();
     }
 
     private ICollection<Quiz> GenerateQuizes(IList<Question> questions, int numberOfQuizes)
@@ -44,7 +46,8 @@ public class QuizContext : DbContext
                 count++;
                 generatedQuizes.Add(new Quiz
                 {
-                    Questions = quizQuestions,
+                    Id=count,
+                    Questions = new List<Question>(quizQuestions.ToList()),
                     QuizName = "Quiz " + count
                 });
             });

@@ -9,7 +9,8 @@ public partial class MainPage : ContentPage
 	public MainPage()
 	{
 		InitializeComponent();
-		Navigation.PushAsync(new QuizPage());
+		//Navigation.PushAsync(new QuizPage());
+		Navigation.PushAsync(new SelectQuizPage());
 	}
 
 	private void OnCounterClicked(object sender, EventArgs e)
