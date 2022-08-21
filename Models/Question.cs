@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Quiz.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,5 +22,7 @@ namespace Quiz.DatabaseModels
        // [Required, MinLength(1), MaxLength(4)]
         [ObservableProperty]
         private ObservableCollection<Answer> answers;
+
+        public virtual ICollection<Quiz.Models.Quiz> Quizzes { get; set; }
     }
 }

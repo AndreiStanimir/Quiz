@@ -19,6 +19,10 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
         string dbPath = System.IO.Path.Combine(FileSystem.AppDataDirectory, "quizes.db");
+        //builder.Services.AddDbContext<QuizContext>(options
+        //    {
+            
+        //});
         builder.Services.AddSingleton<QuizContext>(s => ActivatorUtilities.CreateInstance<QuizContext>(s, dbPath));
         return builder.Build();
     }

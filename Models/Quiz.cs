@@ -10,8 +10,8 @@ namespace Quiz.Models
     public class Quiz
     {
         public int Id { get; set; }
-        public string Text { get; set; }
+        public string QuizName { get; set; }
 
-        public ICollection<Question> Questions{ get; set; }
+        public virtual ICollection<Question> Questions{ get; set; }
     }
 }

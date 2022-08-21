@@ -8,7 +8,7 @@ public class QuizContext : DbContext
     public DbSet<Question> Questions { get; set; }
     public DbSet<Answer> Answers { get; set; }
 
-    //public DbSet<Quiz> Quizzes { get; set; }
+    public DbSet<Quiz> Quizzes { get; set; }
     public string DbPath { get; }
 
     //protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,21 +27,33 @@ public class QuizContext : DbContext
         DbPath = System.IO.Path.Combine(FileSystem.AppDataDirectory, "quizes.db");
         Database.EnsureCreated();
         PopulateDB(@"C:\Users\andreio\Documents\Visual Studio 2022\Projects\Quiz\Quiz\Resources\Raw\Questions.txt", @"C:\Users\andreio\Documents\Visual Studio 2022\Projects\Quiz\Quiz\Resources\Raw\GoodAnswers.txt");
-        GenerateQuizes();
+        Quizzes.AddRange(GenerateQuizes(Questions.ToList(),7));
     }
 
-    private void GenerateQuizes()
+    private ICollection<Quiz> GenerateQuizes(IList<Question> questions, int numberOfQuizes)
     {
-        //List<Question> questions = Questions.ToList();
-        //questions.Shuffle();
-        //while (true)
-        //{
+        ICollection<Quiz> generatedQuizes = new List<Quiz>(numberOfQuizes);
+        for (int i = 0; generatedQuizes.Count()<numberOfQuizes; i++)
+        {
+            questions.Shuffle();
+            var quizzesQuestions = Enumerable.Chunk<Question>(questions.Skip(questions.Count % 100), 100);
+            int count = 0;
 
-        //}
-        //questions.Sort(p => 1<new Guid());
+            Parallel.ForEach(quizzesQuestions, quizQuestions =>
+            {
+                count++;
+                generatedQuizes.Add(new Quiz
+                {
+                    Questions = quizQuestions,
+                    QuizName = "Quiz " + count
+                });
+            });
+        }
+        return generatedQuizes;
+      
     }
 
-
+      
     // The following configures EF to create a Sqlite database file in the
     // special "local" folder for your platform.
     protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -51,14 +63,15 @@ public class QuizContext : DbContext
     {
         string text = File.ReadAllText(pathQuestions);
         var questionsWithAnswers = System.Text.RegularExpressions.Regex.Split(text, @"\n\d+\.")
-            .Take(50);
+            //.Take(50)
+            ;
         int id = 1;
         var correctAnswers = File.ReadAllText(pathAnswers).Split('\n')
-            .Take(53)
+            //.Take(53)
             .Select(line => line.Trim().Split(" "));
         this.BulkDelete(Answers);
         this.BulkDelete(Questions);
-
+        
         SaveChanges();
         Dictionary<int, string> correctAnswersDic = new Dictionary<int, string>(correctAnswers.Count());
         foreach (var correctAnswer in correctAnswers)
