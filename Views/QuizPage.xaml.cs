@@ -6,7 +6,7 @@ using Quiz.ViewModels;
 using System.Data.Entity;
 using CommunityToolkit.Mvvm.Input;
 
-namespace Quiz.Pages;
+namespace Quiz.Views;
 
 public partial class QuizPage : ContentPage
 {

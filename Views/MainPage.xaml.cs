@@ -1,4 +1,4 @@
-﻿using Quiz.Pages;
+﻿using Quiz.Views;
 
 namespace Quiz;
 
