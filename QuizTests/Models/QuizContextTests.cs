@@ -1,5 +1,4 @@
-﻿using Xunit;
-using Quiz.Models;
+﻿using Quiz.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Threading.Tasks;
 using Quiz.DatabaseModels;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
+using NUnit.Framework;
 
 namespace Quiz.Models.Tests
 {
@@ -15,24 +15,25 @@ namespace Quiz.Models.Tests
     {
         QuizContext quizContext;
 
-        public QuizContextTests()
+        [SetUp]
+        protected void Setup()
         {
             quizContext = new QuizContext();
         }
-        [Fact]
+        [Test]
         public void AllQuizesHave100Questions()
         {
             foreach (var quiz in quizContext.Quizzes)
             {
                 Assert.NotNull(quiz);
                 Assert.NotNull(quiz.Questions);
-                Assert.All(quiz.Questions, q => Assert.True(q.Answers.Count >= 3, $"Answers were {q.Answers.Count}"));
-                Assert.Equal(100, quiz.Questions.Count);
+                Assert.True( quiz.Questions.All( q => q.Answers.Count >= 3));
+                Assert.AreEqual(100, quiz.Questions.Count);
             }
 
         }
 
-        [Fact]
+        [Test]
         public void AllQuestionsHaveAtLeastOneQuiz()
         {
 
@@ -41,7 +42,7 @@ namespace Quiz.Models.Tests
                 Assert.True(question.Quizzes.Count > 0);
             }
         }
-        [Fact]
+        [Test]
         public void HasMinimumQuestions()
         {
             int actual = quizContext.Questions.Count();
@@ -49,13 +50,13 @@ namespace Quiz.Models.Tests
             var uniqueQuestions = quizContext.Questions.ToList().Distinct((IEqualityComparer<Question>)new QuestionEqualityComparer());
             uniqueQuestions.Where(q => quizContext.Questions.Contains(q));
 
-            Assert.Equal(uniqueQuestions.Count(), actual);
-            Assert.Equal(1029, actual);
+            Assert.AreEqual(uniqueQuestions.Count(), actual);
+            Assert.AreEqual(1029, actual);
         }
-        [Fact]
+        [Test]
         public void HasCorrectNumberOfQuizes()
         {
-            Assert.Equal(7, quizContext.Quizzes.Count());
+            Assert.AreEqual(7, quizContext.Quizzes.Count());
         }
         class QuestionEqualityComparer : EqualityComparer<Question>
         {

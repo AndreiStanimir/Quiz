@@ -27,7 +27,7 @@ namespace Quiz.DatabaseModels
 
         public IEnumerable<Answer> CorrectAnswers
         {
-            get => answers.Where(a => a.Correct);
+            get => answers.Where(a => a.Correct).ToList();
         }
     }
 }
