@@ -36,11 +36,19 @@ public partial class QuizPage : ContentPage
         GetNextQuestion();
 
     }
+
+    public QuizPage(int id)
+    {
+        InitializeComponent();
+        BindingContext = new QuizViewModel(id);
+    }
+
     void GetNextQuestion()
     {
+        var answers = listViewAnswers.SelectedItems as Answer[];
+        ViewModel.DidUserAnswerCorrectly(answers);
         ViewModel.GetNextQuestion();
         var question = ViewModel.CurrentQuestion;
-        var answers = question.Answers.ToArray();
         //LabelQuestion.Text = question.Text;
     }
     void buttonAnswerClick(object sender, EventArgs e)

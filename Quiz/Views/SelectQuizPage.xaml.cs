@@ -6,4 +6,10 @@ public partial class SelectQuizPage : ContentPage
 	{
 		InitializeComponent();
 	}
+
+	private void collectionViewQuizzes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		var quiz=e.CurrentSelection.FirstOrDefault() as Quiz.Models.Quiz;
+		Navigation.PushAsync(new QuizPage(quiz.Id));
+	}
 }

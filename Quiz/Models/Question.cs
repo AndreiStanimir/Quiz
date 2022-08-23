@@ -19,10 +19,15 @@ namespace Quiz.DatabaseModels
         [ObservableProperty]
         private string text;
 
-       // [Required, MinLength(1), MaxLength(4)]
+        // [Required, MinLength(1), MaxLength(4)]
         [ObservableProperty]
         private ObservableCollection<Answer> answers;
 
         public virtual ICollection<Quiz.Models.Quiz> Quizzes { get; set; }
+
+        public IEnumerable<Answer> CorrectAnswers
+        {
+            get => answers.Where(a => a.Correct);
+        }
     }
 }

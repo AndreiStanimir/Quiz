@@ -47,7 +47,7 @@ namespace Quiz.Models.Tests
             int actual = quizContext.Questions.Count();
             Assert.True(actual > 100);
             var uniqueQuestions = quizContext.Questions.ToList().Distinct((IEqualityComparer<Question>)new QuestionEqualityComparer());
-            uniqueQuestions.Where(q=>quizContext.Questions.Contains(q))
+            uniqueQuestions.Where(q => quizContext.Questions.Contains(q));
 
             Assert.Equal(uniqueQuestions.Count(), actual);
             Assert.Equal(1029, actual);

@@ -9,15 +9,17 @@
         <viewmodel:SelectQuizViewModel x:Name="ViewModel" />
     </ContentPage.BindingContext>
     <VerticalStackLayout>
-        <ListView
+        <CollectionView
             x:Name="collectionViewQuizzes"
             ItemsSource="{x:Binding Quizzes}"
-            SelectionMode="Single">
-            <ListView.ItemTemplate>
+            SelectionMode="Single"
+            SelectionChanged="collectionViewQuizzes_SelectionChanged">
+            <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Button FontSize="18" Text="{x:Binding QuizName}" />
+                    <Label 
+                        FontSize="Large" Text="{x:Binding QuizName}" />
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </VerticalStackLayout>
 </ContentPage>

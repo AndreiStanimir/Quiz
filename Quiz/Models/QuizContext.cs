@@ -5,6 +5,8 @@ namespace Quiz.Models;
 
 public class QuizContext : DbContext
 {
+    private const string PathRAW = @"C:\Users\andre\source\repos\AndreiStanimir\Quiz\Quiz\Resources\Raw\";
+
     public DbSet<Question> Questions { get; set; }
     public DbSet<Answer> Answers { get; set; }
 
@@ -27,7 +29,7 @@ public class QuizContext : DbContext
         DbPath = @"D:\quizes.db";
         Database.EnsureDeleted();
         Database.EnsureCreated();
-        PopulateDB(@"C:\Users\andre\source\repos\AndreiStanimir\Quiz\Resources\Raw\Questions.txt", @"C:\Users\andre\source\repos\AndreiStanimir\Quiz\Resources\Raw\GoodAnswers.txt", 7);
+        PopulateDB(PathRAW+@"Questions.txt", PathRAW+@"GoodAnswers.txt", 7);
         //SaveChanges();
         this.BulkSaveChanges();
     }

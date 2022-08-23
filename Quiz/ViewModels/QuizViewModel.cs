@@ -16,7 +16,7 @@ namespace Quiz.ViewModels
         ICollection<Question> questions;
         [ObservableProperty]
         private int correctAnswers;
-       
+
 
         public QuizViewModel()
         {
@@ -24,6 +24,15 @@ namespace Quiz.ViewModels
             questions = quizContext.Questions.ToList();
             CurrentQuestion = questions.First();
             CorrectAnswers = 0;
+        }
+
+        public QuizViewModel(int id)
+        {
+            quizContext = new QuizContext();
+            var quiz = quizContext.Quizzes.Find(id);
+            questions = quiz.Questions.ToList();
+            currentQuestion = questions.First();
+            correctAnswers = 0;
         }
 
         [RelayCommand]
@@ -35,5 +44,17 @@ namespace Quiz.ViewModels
             //Answers = currentQuestion.Answers;
         }
 
+
+        internal bool DidUserAnswerCorrectly(Answer[] answers)
+        {
+            if (answers.Count() == currentQuestion.CorrectAnswers.Count() &&
+                answers.All(a => a.Correct))
+            {
+                correctAnswers++;
+                return true;
+            }
+
+            return false;
+        }
     }
 }
