@@ -1,0 +1,58 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = Quiz
+build_property.ProjectDir = C:\Users\andre\source\repos\AndreiStanimir\Quiz\
+
+[C:/Users/andre/source/repos/AndreiStanimir/Quiz/Quiz/App.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = Quiz.Quiz.App.xaml
+build_metadata.AdditionalFiles.TargetPath = Quiz\App.xaml
+build_metadata.AdditionalFiles.RelativePath = Quiz\App.xaml
+
+[C:/Users/andre/source/repos/AndreiStanimir/Quiz/Quiz/obj/Debug/net6.0-windows10.0.19041.0/win10-x64/Platforms/Windows/App.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = Quiz.Quiz.obj.Debug.net6._0_windows10._0._19041._0.win10_x64.Platforms.Windows.App.xaml
+build_metadata.AdditionalFiles.TargetPath = Quiz\obj\Debug\net6.0-windows10.0.19041.0\win10-x64\Platforms\Windows\App.xaml
+build_metadata.AdditionalFiles.RelativePath = Quiz\obj\Debug\net6.0-windows10.0.19041.0\win10-x64\Platforms\Windows\App.xaml
+
+[C:/Users/andre/source/repos/AndreiStanimir/Quiz/Quiz/Views/AppShell.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = Quiz.Quiz.Views.AppShell.xaml
+build_metadata.AdditionalFiles.TargetPath = Quiz\Views\AppShell.xaml
+build_metadata.AdditionalFiles.RelativePath = Quiz\Views\AppShell.xaml
+
+[C:/Users/andre/source/repos/AndreiStanimir/Quiz/Quiz/Views/MainPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = Quiz.Quiz.Views.MainPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Quiz\Views\MainPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Quiz\Views\MainPage.xaml
+
+[C:/Users/andre/source/repos/AndreiStanimir/Quiz/Quiz/Views/QuizPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = Quiz.Quiz.Views.QuizPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Quiz\Views\QuizPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Quiz\Views\QuizPage.xaml
+
+[C:/Users/andre/source/repos/AndreiStanimir/Quiz/Quiz/Views/SelectQuizPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = Quiz.Quiz.Views.SelectQuizPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Quiz\Views\SelectQuizPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Quiz\Views\SelectQuizPage.xaml
+
+[C:/Users/andre/source/repos/AndreiStanimir/Quiz/Resources/Styles/Colors.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = Quiz.Resources.Styles.Colors.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Colors.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Colors.xaml
+
+[C:/Users/andre/source/repos/AndreiStanimir/Quiz/Resources/Styles/Styles.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = Quiz.Resources.Styles.Styles.xaml
+build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Styles.xaml
+build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Styles.xaml
