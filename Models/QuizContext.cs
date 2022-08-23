@@ -24,57 +24,57 @@ public class QuizContext : DbContext
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
-        DbPath = System.IO.Path.Combine(FileSystem.AppDataDirectory, "quizes.db");
+        DbPath = @"D:\quizes.db";
+        Database.EnsureDeleted();
         Database.EnsureCreated();
-        PopulateDB(@"C:\Users\andreio\Documents\Visual Studio 2022\Projects\Quiz\Quiz\Resources\Raw\Questions.txt", @"C:\Users\andreio\Documents\Visual Studio 2022\Projects\Quiz\Quiz\Resources\Raw\GoodAnswers.txt");
-        Quizzes.BulkInsert(GenerateQuizes(Questions.ToList(),7));
+        PopulateDB(@"C:\Users\andre\source\repos\AndreiStanimir\Quiz\Resources\Raw\Questions.txt", @"C:\Users\andre\source\repos\AndreiStanimir\Quiz\Resources\Raw\GoodAnswers.txt", 7);
         //SaveChanges();
         this.BulkSaveChanges();
     }
 
     private ICollection<Quiz> GenerateQuizes(IList<Question> questions, int numberOfQuizes)
     {
-        ICollection<Quiz> generatedQuizes = new List<Quiz>(numberOfQuizes);
-        for (int i = 0; generatedQuizes.Count()<numberOfQuizes; i++)
-        {
-            questions.Shuffle();
-            var quizzesQuestions = Enumerable.Chunk<Question>(questions.Skip(questions.Count % 100), 100);
-            int count = 0;
+        if (questions.Count < 100)
+            throw new Exception();
+        questions.Shuffle();
 
-            Parallel.ForEach(quizzesQuestions, quizQuestions =>
+        ICollection<Quiz> generatedQuizes = new List<Quiz>(numberOfQuizes);
+        var quizzesQuestions = Enumerable.Chunk<Question>(questions.Skip(questions.Count % 100), 100).ToArray();
+        if (quizzesQuestions.Any(q=>q.Count()!=100))
+            throw new Exception("quiz questions was not 100");
+        for (int id = 0; id < numberOfQuizes; id++)
+        {
+            generatedQuizes.Add(new Quiz
             {
-                count++;
-                generatedQuizes.Add(new Quiz
-                {
-                    Id=count,
-                    Questions = new List<Question>(quizQuestions.ToList()),
-                    QuizName = "Quiz " + count
-                });
+                //Id = id,
+                Questions = quizzesQuestions[id].Take(100).ToList(),
+                QuizName = "Quiz " + id
             });
         }
+
         return generatedQuizes;
-      
+
     }
 
-      
+
     // The following configures EF to create a Sqlite database file in the
     // special "local" folder for your platform.
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlite($"Data Source={DbPath}");
 
-    public void PopulateDB(string pathQuestions, string pathAnswers)
+    public void PopulateDB(string pathQuestions, string pathAnswers, int numberOfQuizes)
     {
         string text = File.ReadAllText(pathQuestions);
         var questionsWithAnswers = System.Text.RegularExpressions.Regex.Split(text, @"\n\d+\.")
             //.Take(50)
             ;
+        if (questionsWithAnswers.Count() != 1024)
+            throw new Exception();
         int id = 1;
         var correctAnswers = File.ReadAllText(pathAnswers).Split('\n')
             //.Take(53)
             .Select(line => line.Trim().Split(" "));
-        this.BulkDelete(Answers);
-        this.BulkDelete(Questions);
-        
+       
         SaveChanges();
         Dictionary<int, string> correctAnswersDic = new Dictionary<int, string>(correctAnswers.Count());
         foreach (var correctAnswer in correctAnswers)
@@ -104,13 +104,24 @@ public class QuizContext : DbContext
             };
             //questionAnswers.ToList().ForEach(a=>a.Question=question);
             Answers.AddRange(question.Answers);
-            //this.SaveChanges();
+            //SaveChanges();
             Questions.Add(question);
-            //this.SaveChanges();
-
+            //SaveChanges();
         }
-        id++;
-        this.BulkSaveChanges();
+        SaveChanges();
+        var quizes = GenerateQuizes(Questions.ToList(), numberOfQuizes);
+        Quizzes.AddRange(quizes);
+        SaveChanges();
+
+        //Questions.ForEachAsync(q =>
+        //{
+        //    Quizzes.Where(quiz => q.Id == quiz.Id)
+        //    .ForEachAsync(quiz =>
+        //        q.Quizzes.Add(quiz));
+        //}
+        //);
+        this.SaveChanges();
+        
     }
 
 }
