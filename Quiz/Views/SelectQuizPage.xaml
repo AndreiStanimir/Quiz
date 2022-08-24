@@ -16,11 +16,11 @@
             SelectionChanged="collectionViewQuizzes_SelectionChanged">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Label 
-                        FontSize="Large" 
-                        Text="{x:Binding QuizName}" 
+                    <Label
+                        FontSize="Large"
+                        Text="{x:Binding QuizName}"
                         AutomationId="{x:Binding QuizName}"
-                        Margin="20,20,20,20"/>
+                        Margin="20,20,20,20" />
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

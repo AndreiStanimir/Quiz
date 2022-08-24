@@ -13,13 +13,15 @@ namespace Quiz.Models.Tests
 {
     public class QuizContextTests
     {
-        QuizContext quizContext;
+        private QuizContext quizContext;
 
         [SetUp]
         protected void Setup()
         {
-            quizContext = new QuizContext();
+            var dbPath=Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources", "quizes.db");
+            quizContext = new QuizContext(dbPath);
         }
+
         [Test]
         public void AllQuizesHave100Questions()
         {
@@ -27,10 +29,9 @@ namespace Quiz.Models.Tests
             {
                 Assert.NotNull(quiz);
                 Assert.NotNull(quiz.Questions);
-                Assert.True( quiz.Questions.All( q => q.Answers.Count >= 3));
+                Assert.True(quiz.Questions.All(q => q.Answers.Count >= 3));
                 Assert.AreEqual(100, quiz.Questions.Count);
             }
-
         }
 
         [Test]
@@ -41,6 +42,7 @@ namespace Quiz.Models.Tests
                 Assert.True(question.Quizzes.Count > 0);
             }
         }
+
         [Test]
         public void HasMinimumQuestions()
         {
@@ -52,11 +54,13 @@ namespace Quiz.Models.Tests
             Assert.AreEqual(uniqueQuestions.Count(), actual);
             Assert.AreEqual(1029, actual);
         }
+
         [Test]
         public void HasCorrectNumberOfQuizes()
         {
             Assert.AreEqual(7, quizContext.Quizzes.Count());
         }
+
         [Test]
         public void AllAnswersDontStartWithAnswerLetter()
         {
@@ -66,7 +70,8 @@ namespace Quiz.Models.Tests
             Assert.That(actual, Has.None.StartsWith("c."));
             Assert.That(actual, Has.None.StartsWith("d."));
         }
-        class QuestionEqualityComparer : EqualityComparer<Question>
+
+        private class QuestionEqualityComparer : EqualityComparer<Question>
         {
             public override bool Equals(Question b1, Question b2)
             {
@@ -83,6 +88,5 @@ namespace Quiz.Models.Tests
                 return obj.Text.GetHashCode();
             }
         }
-        
     }
 }

@@ -10,13 +10,15 @@ namespace Quiz.ViewModels
 {
     public partial class QuizViewModel : ObservableObject
     {
-        QuizContext quizContext;
+        private QuizContext quizContext;
+
         [ObservableProperty]
-        Question currentQuestion;
-        ICollection<Question> questions;
+        private Question currentQuestion;
+
+        private ICollection<Question> questions;
+
         [ObservableProperty]
         private int correctAnswers;
-
 
         public QuizViewModel()
         {
@@ -38,11 +40,18 @@ namespace Quiz.ViewModels
         [RelayCommand]
         public void GetNextQuestion()
         {
-            questions.Remove(questions.First());
+            var firstQuestion = questions.FirstOrDefault();
+            if (firstQuestion == default)
+            {
+                QuizAttempt quizAttempt = new QuizAttempt
+                {
+                    NumberCorrectAnswers = correctAnswers,
+                };
+            }
+            questions.Remove(firstQuestion);
             CurrentQuestion = questions.First();
             //Answers = currentQuestion.Answers;
         }
-
 
         internal bool DidUserAnswerCorrectly(Answer[] answers)
         {
