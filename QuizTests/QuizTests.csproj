@@ -6,6 +6,7 @@
 		<Nullable>enable</Nullable>
 		<UseMaui>true</UseMaui>
 		<IsPackable>false</IsPackable>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -16,6 +17,7 @@
 		</PackageReference>
 		<PackageReference Include="NUnit" Version="3.13.3" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+		<PackageReference Include="Xappium.UITest.NUnit" Version="1.0.159-beta" />
 	</ItemGroup>
 
 	<ItemGroup>

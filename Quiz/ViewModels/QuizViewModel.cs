@@ -38,7 +38,6 @@ namespace Quiz.ViewModels
         [RelayCommand]
         public void GetNextQuestion()
         {
-            CorrectAnswers++;
             questions.Remove(questions.First());
             CurrentQuestion = questions.First();
             //Answers = currentQuestion.Answers;

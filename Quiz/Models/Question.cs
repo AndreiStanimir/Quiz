@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 namespace Quiz.DatabaseModels
 {
     [Table("Questions")]
-    public partial class Question : ObservableObject
+    public partial class Question : ObservableValidator
     {
         [Key]
         public int Id { get; set; }
         [ObservableProperty]
         private string text;
 
-        // [Required, MinLength(1), MaxLength(4)]
+        [Required, MinLength(1), MaxLength(4)]
         [ObservableProperty]
         private ObservableCollection<Answer> answers;
 

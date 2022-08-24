@@ -22,7 +22,8 @@ public static class MauiProgram
             
         //});
         //builder.Services.AddSqlite()
-        builder.Services.AddSingleton<QuizContext>(s => ActivatorUtilities.CreateInstance<QuizContext>(s, dbPath));
+        //builder.Services.AddSingleton<QuizContext>(s => ActivatorUtilities.CreateInstance<QuizContext>(s, dbPath));
+        builder.Services.AddDbContext<QuizContext>(ServiceLifetime.Singleton);
         return builder.Build();
     }
 }

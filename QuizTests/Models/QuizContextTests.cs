@@ -36,7 +36,6 @@ namespace Quiz.Models.Tests
         [Test]
         public void AllQuestionsHaveAtLeastOneQuiz()
         {
-
             foreach (var question in quizContext.Questions)
             {
                 Assert.True(question.Quizzes.Count > 0);
@@ -58,6 +57,15 @@ namespace Quiz.Models.Tests
         {
             Assert.AreEqual(7, quizContext.Quizzes.Count());
         }
+        [Test]
+        public void AllAnswersDontStartWithAnswerLetter()
+        {
+            IQueryable<string> actual = quizContext.Answers.Select(a => a.Text);
+            Assert.That(actual, Has.None.StartsWith("a."));
+            Assert.That(actual, Has.None.StartsWith("b."));
+            Assert.That(actual, Has.None.StartsWith("c."));
+            Assert.That(actual, Has.None.StartsWith("d."));
+        }
         class QuestionEqualityComparer : EqualityComparer<Question>
         {
             public override bool Equals(Question b1, Question b2)
@@ -75,5 +83,6 @@ namespace Quiz.Models.Tests
                 return obj.Text.GetHashCode();
             }
         }
+        
     }
 }

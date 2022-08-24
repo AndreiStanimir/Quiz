@@ -1,5 +1,6 @@
 ﻿using Quiz.DatabaseModels;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace Quiz.Models;
 
@@ -29,7 +30,7 @@ public class QuizContext : DbContext
         DbPath = @"D:\quizes.db";
         Database.EnsureDeleted();
         Database.EnsureCreated();
-        PopulateDB(PathRAW+@"Questions.txt", PathRAW+@"GoodAnswers.txt", 7);
+        PopulateDB(PathRAW + @"Questions.txt", PathRAW + @"GoodAnswers.txt", 7);
         //SaveChanges();
         this.BulkSaveChanges();
     }
@@ -42,7 +43,7 @@ public class QuizContext : DbContext
 
         ICollection<Quiz> generatedQuizes = new List<Quiz>(numberOfQuizes);
         var quizzesQuestions = Enumerable.Chunk<Question>(questions.Skip(questions.Count % 100), 100).ToArray();
-        if (quizzesQuestions.Any(q=>q.Count()!=100))
+        if (quizzesQuestions.Any(q => q.Count() != 100))
             throw new Exception("quiz questions was not 100");
         for (int id = 0; id < numberOfQuizes; id++)
         {
@@ -76,7 +77,7 @@ public class QuizContext : DbContext
         var correctAnswers = File.ReadAllText(pathAnswers).Split('\n')
             //.Take(53)
             .Select(line => line.Trim().Split(" "));
-       
+
         SaveChanges();
         Dictionary<int, string> correctAnswersDic = new Dictionary<int, string>(correctAnswers.Count());
         foreach (var correctAnswer in correctAnswers)
@@ -85,34 +86,35 @@ public class QuizContext : DbContext
         }
         foreach (var questionWithAnswer in questionsWithAnswers)
         {
-            var answers = questionWithAnswer.Split("\r\n")
-                .Select(a => a.Trim())
+            var questionWithAnswerSplit = questionWithAnswer.Split("\r\n")
+                .Select(a => a.Trim().Trim(' ',',',';','.','\t','\n'))
                 .Where(a => !string.IsNullOrWhiteSpace(a));
-            if (answers.Count() <= 1)
+            if (questionWithAnswerSplit.Count() <= 1)
                 continue;
-            var questionAnswers = answers.Skip(1)
-         .Select(answer => new Answer
+            var questionAnswers = questionWithAnswerSplit.Skip(1)
+                .Select(a => Regex.Replace(a.Trim(), "^ *[a-d]\\.", "", RegexOptions.Compiled))
+                .Select(answer => new Answer
          {
              //AnswerId=++id,
              //Question = question,
              Text = answer,
              Correct = correctAnswersDic[id].Contains(answer.First())
          });
-            Question question = new Question()
-            {
-                //Id = id.ToString(),
-                Text = answers.First(),
-                Answers = new System.Collections.ObjectModel.ObservableCollection<Answer>(questionAnswers.ToArray())
-            };
-            //questionAnswers.ToList().ForEach(a=>a.Question=question);
-            Answers.AddRange(question.Answers);
-            //SaveChanges();
-            Questions.Add(question);
-            //SaveChanges();
-        }
-        SaveChanges();
-        var quizes = GenerateQuizes(Questions.ToList(), numberOfQuizes);
-        Quizzes.AddRange(quizes);
+        Question question = new Question()
+        {
+            //Id = id.ToString(),
+            Text = questionWithAnswerSplit.First().Trim(),
+            Answers = new System.Collections.ObjectModel.ObservableCollection<Answer>(questionAnswers.ToArray())
+        };
+        //questionAnswers.ToList().ForEach(a=>a.Question=question);
+        Answers.AddRange(question.Answers);
+        //SaveChanges();
+        Questions.Add(question);
+        //SaveChanges();
+    }
+    SaveChanges();
+    var quizes = GenerateQuizes(Questions.ToList(), numberOfQuizes);
+    Quizzes.AddRange(quizes);
         SaveChanges();
 
         //Questions.ForEachAsync(q =>
@@ -123,8 +125,8 @@ public class QuizContext : DbContext
         //}
         //);
         this.SaveChanges();
-        
-    }
+
+}
 
 }
 static class ExtensionsClass
