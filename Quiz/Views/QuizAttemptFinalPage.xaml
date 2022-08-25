@@ -10,6 +10,11 @@
     <VerticalStackLayout>
         <Label
             Text="{Binding QuizAttempt.NumberCorrectAnswers,StringFormat='Raspunsuri Corecte: {0}'}"/>
-        
+        <Label
+            x:Name="labelPassedExam"
+            Text="Ai trecut testul!"/>
+        <ScrollView>
+            
+        </ScrollView>
     </VerticalStackLayout>
 </ContentPage>

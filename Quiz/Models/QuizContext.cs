@@ -32,18 +32,14 @@ public class QuizContext : DbContext
         DbPath = @"D:\quizes.db";
         Database.EnsureDeleted();
         Database.EnsureCreated();
-        PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 7);
+        PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
         //SaveChanges();
         this.BulkSaveChanges();
     }
 
     public QuizContext(string dbPath)
     {
-        var folder = Environment.SpecialFolder.LocalApplicationData;
-        var path = Environment.GetFolderPath(folder);
         DbPath = dbPath;
-        //SaveChanges();
-        this.BulkSaveChanges();
     }
 
     private ICollection<Quiz> GenerateQuizes(IList<Question> questions, int numberOfQuizes)
@@ -53,8 +49,13 @@ public class QuizContext : DbContext
         questions.Shuffle();
 
         ICollection<Quiz> generatedQuizes = new List<Quiz>(numberOfQuizes);
-        var quizzesQuestions = Enumerable.Chunk<Question>(questions.Skip(questions.Count % 100), 100).ToArray();
-        if (quizzesQuestions.Any(q => q.Count() != 100))
+        List<Question[]> quizzesQuestions = new();
+        while(quizzesQuestions.Count<numberOfQuizes)
+        {
+            questions.Shuffle();
+            quizzesQuestions.AddRange(Enumerable.Chunk<Question>(questions.Skip(questions.Count % 100), 100));
+        }
+        if (quizzesQuestions.Any(q => q.Length != 100))
             throw new Exception("quiz questions was not 100");
         for (int id = 0; id < numberOfQuizes; id++)
         {
@@ -85,8 +86,8 @@ public class QuizContext : DbContext
         if (questionsWithAnswers.Count() != 1024)
             throw new Exception();
         int id = 1;
-        using var streamer2 = FileSystem.OpenAppPackageFileAsync(pathQuestions).Result;
-        using var streamReader2 = new StreamReader(streamer);
+        using var streamer2 = FileSystem.OpenAppPackageFileAsync(pathAnswers).Result;
+        using var streamReader2 = new StreamReader(streamer2);
         var correctAnswers = streamReader2.ReadToEndAsync().Result.Split('\n')
             //.Take(53)
             .Select(line => line.Trim().Split(" "));

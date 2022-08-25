@@ -1456,7 +1456,7 @@ cand orificiul de perforatie se face pe un ulcer netratat
 cand orificiul de perforatie se deschide in stomacul plin
 
 
-278Angiocolitele sunt afectiuni inflamatorii:
+278.Angiocolitele sunt afectiuni inflamatorii:
 ale colecistului
 ale cailor biliare extra si intra hepatice
 ale colecistului si ale cailor biliare
@@ -3456,7 +3456,7 @@ sa îndeparteaza mult mai simpla si mai usor
 înfasarea se va face compresiv pentru a mentine pansamentul 
 
 
-665Când se executa înfasarea sub forma de spic (spica)?
+665.Când se executa înfasarea sub forma de spic (spica)?
 pentru realizarea unei compresiuni asupra unei articulatii
 pentru a mentine un pansament în care se fac miscari ample
 pentru mentinerea pansamentului la nivelul nasului si barbiei
@@ -3504,7 +3504,7 @@ saltea din material plastic cu structura de burete
 saltea antidecubit
 
 
-673Confortul bolnavului imobilizat la pat trebuie asigurat  prin:
+673.Confortul bolnavului imobilizat la pat trebuie asigurat  prin:
 prin schimbari pasive de pozitie
 schimbarea pozitiei se va face cu ajutorul unor utilaje auxiliare
 schimbarea pozitii este contraindicata la bolnavii imobilizati

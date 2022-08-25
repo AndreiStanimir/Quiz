@@ -14,16 +14,16 @@
             <RowDefinition Height="3*"></RowDefinition>
         </Grid.RowDefinitions>
     </Grid>-->
-    <VerticalStackLayout>
-        <Label
+    <ScrollView>
+        <VerticalStackLayout>
+            <Label
             x:Name="LabelQuestion"
             HorizontalOptions="Center"
             FontSize="Header"
             Text="{Binding CurrentQuestion.Text}"
             VerticalOptions="Center" />
-        <VerticalStackLayout>
-            
-            <CollectionView
+
+            <CollectionView VerticalScrollBarVisibility="Always"
                 x:Name="listViewAnswers"
                 ItemsSource="{x:Binding CurrentQuestion.Answers}"
                 SelectionMode="Multiple">
@@ -50,16 +50,14 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-
-        </VerticalStackLayout>
-        <HorizontalStackLayout VerticalOptions="EndAndExpand">
-            <Label 
+            <HorizontalStackLayout VerticalOptions="EndAndExpand">
+                <Label 
                 x:Name="labelCorrectAnswers" 
                 Text="{Binding CorrectAnswers, 
-                StringFormat=Correct\ Answers: {0}/100}" 
+                StringFormat='Correct\ Answers: {0}/100'}" 
                 HorizontalOptions="Start"
                 VerticalOptions="End"/>
-            <Button
+                <Button
             x:Name="buttonNextQuestion"
             Background="Green"
             Command="{Binding GetNextQuestionCommand}"
@@ -67,6 +65,8 @@
             Text="&gt;"
             VerticalOptions="EndAndExpand" 
             FontSize="Large"/>
-        </HorizontalStackLayout>
-    </VerticalStackLayout>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+     
+    </ScrollView>
 </ContentPage>

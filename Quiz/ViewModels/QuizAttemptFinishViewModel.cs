@@ -12,5 +12,10 @@ namespace Quiz.ViewModels
     {
         [ObservableProperty]
         private QuizAttempt quizAttempt;
+
+        public bool DidUserPass()
+        {
+            return quizAttempt.NumberCorrectAnswers > 80;
+        }
     }
 }
