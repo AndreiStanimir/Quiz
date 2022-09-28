@@ -8,6 +8,16 @@
 		<IsPackable>false</IsPackable>
 		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\quizzes.db" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Resources\quizzes.db">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
 		<PackageReference Include="coverlet.collector" Version="3.1.2">
@@ -21,18 +31,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Quiz\Quiz.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Resource Include="Resources\quizes.db">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Resource>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Update="Resources\quizes.db">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
 	</ItemGroup>
 
 </Project>

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quiz", "Quiz\Quiz.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizTests", "QuizTests\QuizTests.csproj", "{DF294D1F-3079-40F4-82BF-0D74EA93AA05}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{67A581ED-896F-4103-80CD-2D11473ACCB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,14 @@ Global
 		{DF294D1F-3079-40F4-82BF-0D74EA93AA05}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DF294D1F-3079-40F4-82BF-0D74EA93AA05}.Release|x64.ActiveCfg = Release|x64
 		{DF294D1F-3079-40F4-82BF-0D74EA93AA05}.Release|x64.Build.0 = Release|x64
+		{67A581ED-896F-4103-80CD-2D11473ACCB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67A581ED-896F-4103-80CD-2D11473ACCB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67A581ED-896F-4103-80CD-2D11473ACCB0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{67A581ED-896F-4103-80CD-2D11473ACCB0}.Debug|x64.Build.0 = Debug|Any CPU
+		{67A581ED-896F-4103-80CD-2D11473ACCB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67A581ED-896F-4103-80CD-2D11473ACCB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67A581ED-896F-4103-80CD-2D11473ACCB0}.Release|x64.ActiveCfg = Release|Any CPU
+		{67A581ED-896F-4103-80CD-2D11473ACCB0}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

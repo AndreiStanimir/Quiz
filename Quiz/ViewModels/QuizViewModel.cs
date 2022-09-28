@@ -22,7 +22,7 @@ namespace Quiz.ViewModels
 
         public QuizViewModel()
         {
-            quizContext = new QuizContext();
+            quizContext = QuizContextFactory.GetContext();
             questions = quizContext.Questions.ToList();
             CurrentQuestion = questions.First();
             CorrectAnswers = 0;
@@ -30,7 +30,7 @@ namespace Quiz.ViewModels
 
         public QuizViewModel(int id)
         {
-            quizContext = new QuizContext();
+            quizContext = QuizContextFactory.GetContext();
             var quiz = quizContext.Quizzes.Find(id);
             questions = quiz.Questions.ToList();
             currentQuestion = questions.First();
@@ -53,10 +53,9 @@ namespace Quiz.ViewModels
             //Answers = currentQuestion.Answers;
         }
 
-        internal bool DidUserAnswerCorrectly(Answer[] answers)
+        internal bool DidUserAnswerCorrectly(IEnumerable<Answer> answers)
         {
-            if (answers.Count() == currentQuestion.CorrectAnswers.Count() &&
-                answers.All(a => a.Correct))
+            if (answers.SequenceEqual(this.currentQuestion.CorrectAnswers))
             {
                 correctAnswers++;
                 return true;

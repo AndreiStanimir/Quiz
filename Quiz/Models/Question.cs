@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace Quiz.DatabaseModels
 {
     [Table("Questions")]
+    // write a paragraph about observable validator
     public partial class Question : ObservableValidator
     {
         [Key]
@@ -23,11 +24,22 @@ namespace Quiz.DatabaseModels
         [ObservableProperty]
         private ObservableCollection<Answer> answers;
 
-        public virtual ICollection<Quiz.Models.Quiz> Quizzes { get; set; }
+        public virtual ICollection<Models.Quiz> Quizzes { get; set; } = new List<Models.Quiz>();
 
-        public IEnumerable<Answer> CorrectAnswers
+        [Required, MinLength(1)]
+        public IEnumerable<Answer> CorrectAnswers { get; private set; }
+
+        [Required, Range(0,10000)]
+        public int Number { get; set; }
+        
+        public Question()
         {
-            get => answers.Where(a => a.Correct).ToList();
+
+        }
+        public Question(ObservableCollection<Answer> answers)
+        {
+            this.answers = answers;
+            CorrectAnswers = Answers.Where(a => a.Correct).ToList();
         }
     }
 }

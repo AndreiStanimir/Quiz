@@ -25,6 +25,7 @@ namespace Quiz.Models.Tests
         [Test]
         public void AllQuizesHave100Questions()
         {
+            Assert.IsNotEmpty(quizContext.Quizzes);
             foreach (var quiz in quizContext.Quizzes)
             {
                 Assert.NotNull(quiz);
@@ -37,6 +38,7 @@ namespace Quiz.Models.Tests
         [Test]
         public void AllQuestionsHaveAtLeastOneQuiz()
         {
+            Assert.IsNotEmpty(quizContext.Questions);
             foreach (var question in quizContext.Questions)
             {
                 Assert.True(question.Quizzes.Count > 0);

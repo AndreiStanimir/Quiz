@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Quiz.CustomControls
 {
+    /// <summary>
+    /// Document how to write custom controls by extending existing one.
+    /// </summary>
     internal class ButtonAnswer : Button
     {
         public event EventHandler<ToggledEventArgs> Toggled;
@@ -41,6 +44,7 @@ namespace Quiz.CustomControls
             toggleButton.Toggled?.Invoke(toggleButton, new ToggledEventArgs(isToggled));
 
             // Set the visual state
+            // Write a paragraph about visual state manager
             VisualStateManager.GoToState(toggleButton, isToggled ? "ToggledOn" : "ToggledOff");
         }
     }

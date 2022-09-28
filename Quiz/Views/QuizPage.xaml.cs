@@ -33,8 +33,8 @@ public partial class QuizPage : ContentPage
         //}
         //labelCorrectAnswers.SetBinding(ContentProperty, new Binding("CorrectAnswers"));
         //ans1.SetBinding(ContentProperty, new Binding())
-        GetNextQuestion();
-
+        BindingContext = new QuizViewModel();
+        ViewModel.GetNextQuestion();
     }
 
     public QuizPage(int id)
@@ -45,7 +45,7 @@ public partial class QuizPage : ContentPage
 
     void GetNextQuestion()
     {
-        var answers = listViewAnswers.SelectedItems as Answer[];
+        var answers = listViewAnswers.SelectedItems.Cast<Answer>() ;
         ViewModel.DidUserAnswerCorrectly(answers);
         ViewModel.GetNextQuestion();
         var question = ViewModel.CurrentQuestion;
@@ -76,5 +76,19 @@ public partial class QuizPage : ContentPage
         //    if (correctAnswer)
         //    ViewModel.CorrectAnswers++;
         GetNextQuestion();
+    }
+
+    private void listViewAnswers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.CurrentSelection.Count > 0)
+        {
+            buttonNextQuestion.BackgroundColor = Color.Parse("green");
+            buttonNextQuestion.Opacity = 1;
+        }
+        else
+        {
+            buttonNextQuestion.BackgroundColor = Color.Parse("red");
+            buttonNextQuestion.Opacity = 0.5;
+        }
     }
 }

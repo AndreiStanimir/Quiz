@@ -17,7 +17,7 @@ namespace Quiz.ViewModels
         private ObservableCollection<Quiz.Models.Quiz> quizzes;
         public SelectQuizViewModel()
         {
-            quizContext = new QuizContext();
+            quizContext = QuizContextFactory.GetContext();
             quizzes = quizContext.Quizzes.ToObservableCollection();
         }
     }

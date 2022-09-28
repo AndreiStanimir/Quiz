@@ -18,6 +18,6 @@ namespace Quiz.Models
         [ObservableProperty]
         string quizName;
         [Required]
-        public virtual ICollection<Question> Questions { get; set; } = new List<Question>(100);
+        public virtual ICollection<Question> Questions { get; set; }
     }
 }

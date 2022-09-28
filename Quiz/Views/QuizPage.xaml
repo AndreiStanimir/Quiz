@@ -7,7 +7,9 @@
     xmlns:viewmodel="clr-namespace:Quiz.ViewModels"
     Title="QuizPage">
     <ContentPage.BindingContext>
-        <viewmodel:QuizViewModel x:Name="ViewModel" />
+        <viewmodel:QuizViewModel x:Name="ViewModel">
+
+        </viewmodel:QuizViewModel>
     </ContentPage.BindingContext>
     <!--<Grid>
         <Grid.RowDefinitions>
@@ -20,18 +22,24 @@
             x:Name="LabelQuestion"
             HorizontalOptions="Center"
             FontSize="Header"
-            Text="{Binding CurrentQuestion.Text}"
+            Text="{x:Binding CurrentQuestion.Text}"
             VerticalOptions="Center" />
 
-            <CollectionView VerticalScrollBarVisibility="Always"
+            <CollectionView 
+                VerticalScrollBarVisibility="Always"
                 x:Name="listViewAnswers"
                 ItemsSource="{x:Binding CurrentQuestion.Answers}"
-                SelectionMode="Multiple">
+                SelectionMode="Multiple"
+                SelectionChanged="listViewAnswers_SelectionChanged">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Label FontSize="Medium" 
-                               Text="{Binding Text,StringFormat='•{0}'}">
-                            <!--<VisualStateManager.VisualStateGroups>
+                        <HorizontalStackLayout>
+                            <Label  FontSize="Medium"
+                                    Text="✓"
+                                    IsVisible="{Binding Correct}" />
+                            <Label FontSize="Medium"
+                               Text="{Binding Text,StringFormat='• {0}'}">
+                                <!--<VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="ToggledOff">
                                         <VisualState.Setters>
@@ -45,28 +53,30 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>-->
-                        </Label>
+                            </Label>
+                        </HorizontalStackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
             <HorizontalStackLayout VerticalOptions="EndAndExpand">
-                <Label 
-                x:Name="labelCorrectAnswers" 
-                Text="{Binding CorrectAnswers, 
-                StringFormat='Correct\ Answers: {0}/100'}" 
+                <Label
+                x:Name="labelCorrectAnswers"
+                Text="{Binding CorrectAnswers,
+                StringFormat='Correct\ Answers: {0}/100'}"
                 HorizontalOptions="Start"
-                VerticalOptions="End"/>
+                VerticalOptions="End" />
                 <Button
             x:Name="buttonNextQuestion"
-            Background="Green"
-            Command="{Binding GetNextQuestionCommand}"
+            BackgroundColor="Green"
+            Clicked="buttonNextQuestion_Clicked"
+                    IsEnabled="true"
+                    Opacity="50"
             HorizontalOptions="End"
             Text="&gt;"
-            VerticalOptions="EndAndExpand" 
-            FontSize="Large"/>
+            VerticalOptions="EndAndExpand"
+            FontSize="Large" />
             </HorizontalStackLayout>
         </VerticalStackLayout>
-     
     </ScrollView>
 </ContentPage>

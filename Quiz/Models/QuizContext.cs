@@ -1,5 +1,6 @@
-﻿using Quiz.DatabaseModels;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Quiz.DatabaseModels;
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
 namespace Quiz.Models;
@@ -16,30 +17,42 @@ public class QuizContext : DbContext
 
     public string DbPath { get; }
 
-    //protected override void OnModelCreating(ModelBuilder modelBuilder)
-    //{
-    //    modelBuilder.Entity<Question>()
-    //        .HasOne<Answer>()
-    //        .WithMany(q => q.Question)
-    //        .HasForeignKey(q => q.AnswerId);
-
-    //}
+    private List<Question> questions = new List<Question>();
+    private List<Quiz> quizzes = new List<Quiz>();
+    private List<Answer> answers1 = new List<Answer>();
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        //modelBuilder.Entity<Question>()
+        //    .HasData(questions)
+        //    ;
+        //modelBuilder.Entity<Quiz>()
+        //  .HasData(quizzes)
+        //  ;
+        //modelBuilder.Entity<Answer>()
+        //  .HasData(answers1)
+        //  ;
+    }
 
     public QuizContext()
     {
-        var folder = Environment.SpecialFolder.LocalApplicationData;
-        var path = Environment.GetFolderPath(folder);
-        DbPath = @"D:\quizes.db";
+        //var folder = Environment.SpecialFolder.LocalApplicationData;
+        //var path = Environment.GetFolderPath(folder);
+        DbPath = @"C:\Users\andre\source\repos\AndreiStanimir\Quiz\QuizTests\Resources\quizzes.db";
         Database.EnsureDeleted();
         Database.EnsureCreated();
         PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
-        //SaveChanges();
-        this.BulkSaveChanges();
-    }
 
+        //if(!File.Exists(DbPath))
+        //PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
+        //SaveChanges();
+    }
     public QuizContext(string dbPath)
     {
         DbPath = dbPath;
+        //PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
+        //SaveChanges();
+
+        Database.EnsureCreated();
     }
 
     private ICollection<Quiz> GenerateQuizes(IList<Question> questions, int numberOfQuizes)
@@ -50,7 +63,7 @@ public class QuizContext : DbContext
 
         ICollection<Quiz> generatedQuizes = new List<Quiz>(numberOfQuizes);
         List<Question[]> quizzesQuestions = new();
-        while(quizzesQuestions.Count<numberOfQuizes)
+        while (quizzesQuestions.Count < numberOfQuizes)
         {
             questions.Shuffle();
             quizzesQuestions.AddRange(Enumerable.Chunk<Question>(questions.Skip(questions.Count % 100), 100));
@@ -59,12 +72,15 @@ public class QuizContext : DbContext
             throw new Exception("quiz questions was not 100");
         for (int id = 0; id < numberOfQuizes; id++)
         {
-            generatedQuizes.Add(new Quiz
+            var currentQuizQuestions = quizzesQuestions[id].Take(100).ToList();
+            var currentQuiz = new Quiz
             {
                 //Id = id,
-                Questions = quizzesQuestions[id].Take(100).ToList(),
+                Questions = currentQuizQuestions,
                 QuizName = "Quiz " + id
-            });
+            };
+            currentQuizQuestions.AsParallel().ForAll(question => question.Quizzes.Add(currentQuiz));
+            generatedQuizes.Add(currentQuiz);
         }
 
         return generatedQuizes;
@@ -75,73 +91,34 @@ public class QuizContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlite($"Data Source={DbPath}");
 
-    public void PopulateDB(string pathQuestions, string pathAnswers, int numberOfQuizes)
+   
+
+
+
+    public User GetCurrentUser { get; set; }
+
+    public RawReadFiles ReadFiles(string pathQuestions, string pathAnswers)
     {
         using var streamer = FileSystem.OpenAppPackageFileAsync(pathQuestions).Result;
         using var streamReader = new StreamReader(streamer);
         string text = streamReader.ReadToEndAsync().Result;
-        var questionsWithAnswers = System.Text.RegularExpressions.Regex.Split(text, @"\n\d+\.")
+        var questionsWithAnswersAndNumbers =
+            System.Text.RegularExpressions.Regex.Split(text, @"(\n\d+\.)")
+
             //.Take(50)
-            ;
-        if (questionsWithAnswers.Count() != 1024)
+            .Select(q => q.Trim(' ', ',', ';', '.', '\t', '\n', '\r'))
+            .Where(q => !String.IsNullOrWhiteSpace(q))
+            .ToArray();
+        var questionNumbers = questionsWithAnswersAndNumbers.Where((x, i) => i % 2 == 0);
+        var questionsWithAnswers = questionsWithAnswersAndNumbers.Where((x, i) => i % 2 == 1);
+        if (questionsWithAnswers.Count() != 1023)
             throw new Exception();
-        int id = 1;
         using var streamer2 = FileSystem.OpenAppPackageFileAsync(pathAnswers).Result;
         using var streamReader2 = new StreamReader(streamer2);
-        var correctAnswers = streamReader2.ReadToEndAsync().Result.Split('\n')
-            //.Take(53)
-            .Select(line => line.Trim().Split(" "));
+        var correctAnswers = streamReader2.ReadToEndAsync().Result.Split('\n');
 
-        SaveChanges();
-        Dictionary<int, string> correctAnswersDic = new Dictionary<int, string>(correctAnswers.Count());
-        foreach (var correctAnswer in correctAnswers)
-        {
-            correctAnswersDic[int.Parse(correctAnswer[0].Trim())] = correctAnswer[1].Trim();
-        }
-        foreach (var questionWithAnswer in questionsWithAnswers)
-        {
-            var questionWithAnswerSplit = questionWithAnswer.Split("\r\n")
-                .Select(a => a.Trim().Trim(' ', ',', ';', '.', '\t', '\n'))
-                .Where(a => !string.IsNullOrWhiteSpace(a));
-            if (questionWithAnswerSplit.Count() <= 1)
-                continue;
-            var questionAnswers = questionWithAnswerSplit.Skip(1)
-                .Select(a => Regex.Replace(a.Trim(), "^ *[a-d]\\.", "", RegexOptions.Compiled))
-                .Select(answer => new Answer
-                {
-                    //AnswerId=++id,
-                    //Question = question,
-                    Text = answer,
-                    Correct = correctAnswersDic[id].Contains(answer.First())
-                });
-            Question question = new Question()
-            {
-                //Id = id.ToString(),
-                Text = questionWithAnswerSplit.First().Trim(),
-                Answers = new System.Collections.ObjectModel.ObservableCollection<Answer>(questionAnswers.ToArray())
-            };
-            //questionAnswers.ToList().ForEach(a=>a.Question=question);
-            Answers.AddRange(question.Answers);
-            //SaveChanges();
-            Questions.Add(question);
-            //SaveChanges();
-        }
-        SaveChanges();
-        var quizes = GenerateQuizes(Questions.ToList(), numberOfQuizes);
-        Quizzes.AddRange(quizes);
-        SaveChanges();
-
-        //Questions.ForEachAsync(q =>
-        //{
-        //    Quizzes.Where(quiz => q.Id == quiz.Id)
-        //    .ForEachAsync(quiz =>
-        //        q.Quizzes.Add(quiz));
-        //}
-        //);
-        this.SaveChanges();
+        return new RawReadFiles(questionsWithAnswers.ToArray(), correctAnswers, questionNumbers.ToArray());
     }
-
-    public User GetCurrentUser { get; set; }
 }
 
 internal static class ExtensionsClass
@@ -158,5 +135,18 @@ internal static class ExtensionsClass
             list[k] = list[n];
             list[n] = value;
         }
+    }
+}
+
+public record struct RawReadFiles(string[] questionsWithAnswers, string[] correctAnswers, string[] questionNumbers)
+{
+    public static implicit operator (string[] questionsWithAnswers, string[] correctAnswers, string[] questionNumbers)(RawReadFiles value)
+    {
+        return (value.questionsWithAnswers, value.correctAnswers, value.questionNumbers);
+    }
+
+    public static implicit operator RawReadFiles((string[] questionsWithAnswers, string[] correctAnswers, string[] questionNumbers) value)
+    {
+        return new RawReadFiles(value.questionsWithAnswers, value.correctAnswers, value.questionNumbers);
     }
 }
