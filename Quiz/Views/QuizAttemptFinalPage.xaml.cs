@@ -1,12 +1,15 @@
+using Quiz.Models;
+using Quiz.ViewModels;
+
 namespace Quiz.Views;
 
 public partial class QuizAttemptFinalPage : ContentPage
 {
-	public QuizAttemptFinalPage()
+	public QuizAttemptFinalPage(QuizAttemptFinishViewModel quizAttempt)
 	{
 		InitializeComponent();
 
-		if(ViewModel.DidUserPass())
+		if(quizAttempt.DidUserPass())
 		{
 			labelPassedExam.Text = "Ai trecut testul!";
 			labelPassedExam.TextColor = Color.Parse("green");

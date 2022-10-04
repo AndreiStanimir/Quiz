@@ -5,12 +5,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Quiz.CustomControls"
     xmlns:viewmodel="clr-namespace:Quiz.ViewModels"
+    xmlns:models="clr-namespace:Quiz.Models"
+    x:DataType="viewmodel:QuizViewModel"
     Title="QuizPage">
-    <ContentPage.BindingContext>
+    <!--<ContentPage.BindingContext>
         <viewmodel:QuizViewModel x:Name="ViewModel">
 
         </viewmodel:QuizViewModel>
-    </ContentPage.BindingContext>
+    </ContentPage.BindingContext>-->
     <!--<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"></RowDefinition>
@@ -29,16 +31,17 @@
                 VerticalScrollBarVisibility="Always"
                 x:Name="listViewAnswers"
                 ItemsSource="{x:Binding CurrentQuestion.Answers}"
+                
                 SelectionMode="Multiple"
                 SelectionChanged="listViewAnswers_SelectionChanged">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                <CollectionView.ItemTemplate >
+                    <DataTemplate x:DataType="models:Answer">
                         <HorizontalStackLayout>
                             <Label  FontSize="Medium"
                                     Text="✓"
-                                    IsVisible="{Binding Correct}" />
+                                    IsVisible="{x:Binding Correct}" />
                             <Label FontSize="Medium"
-                               Text="{Binding Text,StringFormat='• {0}'}">
+                               Text="{x:Binding Text,StringFormat='• {0}'}">
                                 <!--<VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="ToggledOff">
@@ -68,14 +71,15 @@
                 VerticalOptions="End" />
                 <Button
             x:Name="buttonNextQuestion"
-            BackgroundColor="Green"
+            BackgroundColor="Red"
             Clicked="buttonNextQuestion_Clicked"
-                    IsEnabled="true"
-                    Opacity="50"
+                    IsEnabled="False"
+                    Opacity="0.5"
             HorizontalOptions="End"
             Text="&gt;"
             VerticalOptions="EndAndExpand"
-            FontSize="Large" />
+            FontSize="Large"
+            />
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

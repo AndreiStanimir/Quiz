@@ -8,10 +8,21 @@ using System.Threading.Tasks;
 
 namespace Quiz.ViewModels
 {
-    internal partial class QuizAttemptFinishViewModel : ObservableObject
+    public partial class QuizAttemptFinishViewModel : ObservableObject
     {
         [ObservableProperty]
         private QuizAttempt quizAttempt;
+
+        public QuizAttemptFinishViewModel()
+        {
+            var context= QuizContextFactory.GetContext();
+            quizAttempt= context.QuizAttempts.First();
+
+        }
+        public QuizAttemptFinishViewModel(QuizAttempt quizAttempt)
+        {
+            this.quizAttempt = quizAttempt;
+        }
 
         public bool DidUserPass()
         {

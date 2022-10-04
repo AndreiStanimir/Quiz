@@ -12,8 +12,13 @@ namespace Quiz.Models
 
         public static QuizContext GetContext()
         {
-            if (quizContext == null)
-                quizContext = new QuizContext();
+            quizContext ??= new QuizContext();
+            return quizContext;
+        }
+
+        public static QuizContext GetContext(string v)
+        {
+            quizContext ??= new QuizContext(v);
             return quizContext;
         }
     }

@@ -1,4 +1,4 @@
-using Quiz.DatabaseModels;
+
 using Quiz.Models;
 using Microsoft.EntityFrameworkCore;
 using Quiz.CustomControls;
@@ -11,7 +11,7 @@ namespace Quiz.Views;
 public partial class QuizPage : ContentPage
 {
     ButtonAnswer[] buttonsAnswers;
-
+    QuizViewModel ViewModel;
     //QuizViewModel viewModel
     //{
     //    get =>
@@ -33,21 +33,27 @@ public partial class QuizPage : ContentPage
         //}
         //labelCorrectAnswers.SetBinding(ContentProperty, new Binding("CorrectAnswers"));
         //ans1.SetBinding(ContentProperty, new Binding())
-        BindingContext = new QuizViewModel();
-        ViewModel.GetNextQuestion();
+        BindingContext = ViewModel = new QuizViewModel();
+
+        //ViewModel.GetNextQuestion();
     }
 
     public QuizPage(int id)
     {
         InitializeComponent();
-        BindingContext = new QuizViewModel(id);
+        BindingContext = ViewModel = new QuizViewModel(id);
     }
 
     void GetNextQuestion()
     {
-        var answers = listViewAnswers.SelectedItems.Cast<Answer>() ;
-        ViewModel.DidUserAnswerCorrectly(answers);
-        ViewModel.GetNextQuestion();
+        var answers = listViewAnswers.SelectedItems.Cast<Answer>();
+        //ViewModel.DidUserAnswerCorrectly(answers);
+        bool gameEnded = !ViewModel.GetNextQuestion();
+        if (gameEnded)
+        {
+            Navigation.PopAsync();
+            Navigation.PushAsync(new QuizAttemptFinalPage(new QuizAttemptFinishViewModel()));
+        };
         var question = ViewModel.CurrentQuestion;
         //LabelQuestion.Text = question.Text;
     }
@@ -68,14 +74,10 @@ public partial class QuizPage : ContentPage
 
     private void buttonNextQuestion_Clicked(object sender, EventArgs e)
     {
-        //listViewAnswers.SelectedItems<La
-        //    .ItemsSource
-        //    .AsQueryable()
-        //    .ToListAsync()
-        //    .
-        //    if (correctAnswer)
-        //    ViewModel.CorrectAnswers++;
+        var  answers = listViewAnswers.SelectedItems.Select<object,Answer>(s=>(Answer)s);
+        ViewModel.DidUserAnswerCorrectly(answers);
         GetNextQuestion();
+        listViewAnswers.SelectedItems.Clear();
     }
 
     private void listViewAnswers_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -84,11 +86,14 @@ public partial class QuizPage : ContentPage
         {
             buttonNextQuestion.BackgroundColor = Color.Parse("green");
             buttonNextQuestion.Opacity = 1;
+            buttonNextQuestion.IsEnabled = true;
         }
         else
         {
             buttonNextQuestion.BackgroundColor = Color.Parse("red");
             buttonNextQuestion.Opacity = 0.5;
+            buttonNextQuestion.IsEnabled = false;
+
         }
     }
 }

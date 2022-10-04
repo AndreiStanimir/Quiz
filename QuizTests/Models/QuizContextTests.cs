@@ -4,27 +4,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Quiz.DatabaseModels;
+
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using NUnit.Framework;
+using Castle.Core.Internal;
+using Microsoft.VisualBasic;
 
 namespace Quiz.Models.Tests
 {
     public class QuizContextTests
     {
-        private QuizContext quizContext;
+        private QuizContext quizContext = null!;
 
         [SetUp]
         protected void Setup()
         {
-            var dbPath=Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources", "quizes.db");
-            quizContext = new QuizContext(dbPath);
+            var dbPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources", "quizzes.db");
+            Assert.That(File.Exists(dbPath), Is.True);
+            quizContext = QuizContextFactory.GetContext(@"C:\Users\andre\source\repos\AndreiStanimir\Quiz\QuizTests\Resources\quizzes.db");
         }
 
         [Test]
         public void AllQuizesHave100Questions()
         {
+
             Assert.IsNotEmpty(quizContext.Quizzes);
             foreach (var quiz in quizContext.Quizzes)
             {
@@ -50,6 +54,10 @@ namespace Quiz.Models.Tests
         {
             int actual = quizContext.Questions.Count();
             Assert.True(actual > 100);
+            foreach (var question in quizContext.Questions.ToList())
+            {
+                Assert.True(question.Answers.ToList().Any());
+            }
             var uniqueQuestions = quizContext.Questions.ToList().Distinct((IEqualityComparer<Question>)new QuestionEqualityComparer());
             uniqueQuestions.Where(q => quizContext.Questions.Contains(q));
 
@@ -60,7 +68,7 @@ namespace Quiz.Models.Tests
         [Test]
         public void HasCorrectNumberOfQuizes()
         {
-            Assert.AreEqual(7, quizContext.Quizzes.Count());
+            Assert.AreEqual(15, quizContext.Quizzes.Count());
         }
 
         [Test]
@@ -72,17 +80,23 @@ namespace Quiz.Models.Tests
             Assert.That(actual, Has.None.StartsWith("c."));
             Assert.That(actual, Has.None.StartsWith("d."));
         }
+        [Test]
+        public void AllQuestionsHaveAtLeastCorrectOneAnswer()
+        {
+            Assert.That(quizContext.Questions.All(q => !q.CorrectAnswers.IsNullOrEmpty()));
+        }
 
         private class QuestionEqualityComparer : EqualityComparer<Question>
         {
-            public override bool Equals(Question b1, Question b2)
+            public override bool Equals(Question? b1, Question? b2)
             {
                 if (b1 == null && b2 == null)
                     return true;
                 else if (b1 == null || b2 == null)
                     return false;
 
-                return b1.Text == b2.Text;
+                return b1.Text == b2.Text &&
+                    Enumerable.SequenceEqual(b1.Answers, b2.Answers);
             }
 
             public override int GetHashCode([DisallowNull] Question obj)

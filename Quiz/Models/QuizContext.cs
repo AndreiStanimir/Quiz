@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Quiz.DatabaseModels;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace Quiz.Models;
@@ -48,14 +48,89 @@ public class QuizContext : DbContext
     }
     public QuizContext(string dbPath)
     {
+
         DbPath = dbPath;
+        Database.EnsureCreated();
+
         //PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
         //SaveChanges();
 
-        Database.EnsureCreated();
+        //Database.EnsureCreated();
+    }
+    public void PopulateDB(string pathQuestions, string pathAnswers, int numberOfQuizes)
+    {
+        using var streamer = FileSystem.OpenAppPackageFileAsync(pathQuestions).Result;
+        using var streamReader = new StreamReader(streamer);
+        string text = streamReader.ReadToEndAsync().Result;
+        var questionsWithAnswers = System.Text.RegularExpressions.Regex.Split(text, @"\n\d+\.")
+            //.Take(50)
+            ;
+        if (questionsWithAnswers.Count() != 1025)
+            throw new Exception();
+        int id = 1;
+        using var streamer2 = FileSystem.OpenAppPackageFileAsync(pathAnswers).Result;
+        using var streamReader2 = new StreamReader(streamer2);
+        var correctAnswers = streamReader2.ReadToEndAsync().Result.Split('\n')
+            //.Take(53)
+            .Select(line => line.Trim().Split(" "));
+
+        SaveChanges();
+        Dictionary<int, string> correctAnswersDic = new Dictionary<int, string>(correctAnswers.Count());
+        foreach (var correctAnswer in correctAnswers)
+        {
+            correctAnswersDic[int.Parse(correctAnswer[0].Trim())] = correctAnswer[1].Trim();
+        }
+        foreach (var questionWithAnswer in questionsWithAnswers)
+        {
+            var questionWithAnswerSplit = questionWithAnswer.Split("\r\n")
+                .Select(a => a.Trim().Trim(' ', ',', ';', '.', '\t', '\n'))
+                .Where(a => !string.IsNullOrWhiteSpace(a));
+            if (questionWithAnswerSplit.Count() <= 1)
+                continue;
+            var questionAnswers = questionWithAnswerSplit.Skip(1)
+                .Select(a => Regex.Replace(a.Trim(), "^ *[a-d]\\.", "", RegexOptions.Compiled))
+                .ToArray();
+            List<Answer> answers=new List<Answer>();
+            for (int i = 0; i < questionAnswers.Count(); i++)
+            {
+                char currentAnswerLetter = (char)('a' + i);
+                var answer = questionAnswers[i];
+                answers.Add(new Answer()
+                {
+                    Text = answer,
+                    Correct = correctAnswersDic[id].Contains(currentAnswerLetter)
+                }
+                );
+            }
+                
+            Question question = new Question(new System.Collections.ObjectModel.ObservableCollection<Answer>(answers))
+            {
+                //Id = id.ToString(),
+                Text = questionWithAnswerSplit.First().Trim(),
+            };
+            Debug.Assert(question.CorrectAnswers.Count() > 0);
+            //questionAnswers.ToList().ForEach(a=>a.Question=question);
+            Answers.AddRange(question.Answers);
+            //SaveChanges();
+            Questions.Add(question);
+            //SaveChanges();
+        }
+        SaveChanges();
+        var quizes = GenerateQuizes(Questions.ToList(), numberOfQuizes);
+        Quizzes.AddRange(quizes);
+        SaveChanges();
+
+        //Questions.ForEachAsync(q =>
+        //{
+        //    Quizzes.Where(quiz => q.Id == quiz.Id)
+        //    .ForEachAsync(quiz =>
+        //        q.Quizzes.Add(quiz));
+        //}
+        //);
+        this.SaveChanges();
     }
 
-    private ICollection<Quiz> GenerateQuizes(IList<Question> questions, int numberOfQuizes)
+    private ICollection<Quiz> GenerateQuizes(IList<Question> questions, int numberOfQuizes, int numberOfQuestionsPerQuiz = 5)
     {
         if (questions.Count < 100)
             throw new Exception();
@@ -66,9 +141,9 @@ public class QuizContext : DbContext
         while (quizzesQuestions.Count < numberOfQuizes)
         {
             questions.Shuffle();
-            quizzesQuestions.AddRange(Enumerable.Chunk<Question>(questions.Skip(questions.Count % 100), 100));
+            quizzesQuestions.AddRange(Enumerable.Chunk<Question>(questions.Skip(questions.Count % numberOfQuestionsPerQuiz), numberOfQuestionsPerQuiz));
         }
-        if (quizzesQuestions.Any(q => q.Length != 100))
+        if (quizzesQuestions.Any(q => q.Length != numberOfQuestionsPerQuiz))
             throw new Exception("quiz questions was not 100");
         for (int id = 0; id < numberOfQuizes; id++)
         {
@@ -91,7 +166,7 @@ public class QuizContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlite($"Data Source={DbPath}");
 
-   
+
 
 
 

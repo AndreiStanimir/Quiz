@@ -15,7 +15,7 @@
 
 	<ItemGroup>
 	  <Content Include="Resources\quizzes.db">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	</ItemGroup>
 	<ItemGroup>

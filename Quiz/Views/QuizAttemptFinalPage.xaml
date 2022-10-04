@@ -4,9 +4,9 @@
              x:Class="Quiz.Views.QuizAttemptFinalPage"
              Title="QuizAttemptFinalPage"
              xmlns:viewmodel="clr-namespace:Quiz.ViewModels">
-    <ContentPage.BindingContext>
+    <!--<ContentPage.BindingContext>
         <viewmodel:QuizAttemptFinishViewModel x:Name="ViewModel" />
-    </ContentPage.BindingContext>
+    </ContentPage.BindingContext>-->
     <VerticalStackLayout>
         <Label
             Text="{Binding QuizAttempt.NumberCorrectAnswers,StringFormat='Raspunsuri Corecte: {0}'}"/>

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Quiz.DatabaseModels
+namespace Quiz.Models
 {
     [Table("Questions")]
     // write a paragraph about observable validator

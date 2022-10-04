@@ -1,10 +1,11 @@
 ﻿using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Quiz.DatabaseModels;
+
 using Quiz.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Quiz.ViewModels
 {
@@ -20,11 +21,14 @@ namespace Quiz.ViewModels
         [ObservableProperty]
         private int correctAnswers;
 
+        IEnumerator<Question> questionsEnumerator;
+
         public QuizViewModel()
         {
             quizContext = QuizContextFactory.GetContext();
-            questions = quizContext.Questions.ToList();
-            CurrentQuestion = questions.First();
+            questions = quizContext.Quizzes.First().Questions.ToArray();
+            questionsEnumerator = questions.GetEnumerator();
+            GetNextQuestion();
             CorrectAnswers = 0;
         }
 
@@ -33,33 +37,43 @@ namespace Quiz.ViewModels
             quizContext = QuizContextFactory.GetContext();
             var quiz = quizContext.Quizzes.Find(id);
             questions = quiz.Questions.ToList();
-            currentQuestion = questions.First();
+            questionsEnumerator = questions.GetEnumerator();
+            GetNextQuestion();
             correctAnswers = 0;
         }
 
-        [RelayCommand]
-        public void GetNextQuestion()
+        //[RelayCommand]
+
+        public bool GetNextQuestion()
         {
-            var firstQuestion = questions.FirstOrDefault();
-            if (firstQuestion == default)
+            if (!questionsEnumerator.MoveNext())
             {
                 QuizAttempt quizAttempt = new QuizAttempt
                 {
                     NumberCorrectAnswers = correctAnswers,
                 };
+                quizContext.QuizAttempts.Add(quizAttempt);
+                quizContext.SaveChanges();
+                return false;
             }
-            questions.Remove(firstQuestion);
-            CurrentQuestion = questions.First();
+            //Debug.Assert(questions.Remove (firstQuestion)==true);
+            CurrentQuestion = questionsEnumerator.Current;
+            return true;
             //Answers = currentQuestion.Answers;
         }
 
         internal bool DidUserAnswerCorrectly(IEnumerable<Answer> answers)
         {
-            if (answers.SequenceEqual(this.currentQuestion.CorrectAnswers))
-            {
-                correctAnswers++;
-                return true;
-            }
+            Debug.Assert(answers != null);
+            Debug.Assert(this.currentQuestion?.CorrectAnswers != null);
+            //if (answers.SequenceEqual(this.currentQuestion.CorrectAnswers))
+            if (answers.Count() == this.currentQuestion.CorrectAnswers.Count())
+                if (answers.All(a => a.Correct))
+                //if (this.currentQuestion.CorrectAnswers.All(a => answers.FirstOrDefault(answerFromUser => a.AnswerId == answerFromUser.AnswerId) != default))
+                {
+                    CorrectAnswers++;
+                    return true;
+                }
 
             return false;
         }
