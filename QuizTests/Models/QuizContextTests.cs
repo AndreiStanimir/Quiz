@@ -28,7 +28,6 @@ namespace Quiz.Models.Tests
         [Test]
         public void AllQuizesHave100Questions()
         {
-
             Assert.IsNotEmpty(quizContext.Quizzes);
             foreach (var quiz in quizContext.Quizzes)
             {
@@ -75,6 +74,7 @@ namespace Quiz.Models.Tests
         public void AllAnswersDontStartWithAnswerLetter()
         {
             IQueryable<string> actual = quizContext.Answers.Select(a => a.Text);
+            Assert.IsNotEmpty(actual);
             Assert.That(actual, Has.None.StartsWith("a."));
             Assert.That(actual, Has.None.StartsWith("b."));
             Assert.That(actual, Has.None.StartsWith("c."));
