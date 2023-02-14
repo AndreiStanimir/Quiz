@@ -17,7 +17,7 @@ namespace Quiz.Models.Tests
     {
         private QuizContext quizContext = null!;
 
-        [SetUp]
+        [OneTimeSetUp]
         protected void Setup()
         {
             var dbPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources", "quizzes.db");
@@ -83,7 +83,7 @@ namespace Quiz.Models.Tests
         [Test]
         public void AllQuestionsHaveAtLeastCorrectOneAnswer()
         {
-            Assert.That(quizContext.Questions.All(q => !q.CorrectAnswers.IsNullOrEmpty()));
+            Assert.That(quizContext.Questions.All(q => q.CorrectAnswers.Count()>0));
         }
 
         private class QuestionEqualityComparer : EqualityComparer<Question>
