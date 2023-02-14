@@ -16,11 +16,19 @@
             SelectionChanged="collectionViewQuizzes_SelectionChanged">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Label
+                    <HorizontalStackLayout>
+                        <Label
                         FontSize="Large"
                         Text="{x:Binding QuizName}"
                         AutomationId="{x:Binding QuizName}"
                         Margin="20,20,20,20" />
+                    <Label
+                        HorizontalOptions="End"
+                        FontSize="Large"
+                        TextColor="GreenYellow"
+                        Text="{x:Binding BestAttempt.NumberCorrectAnswers}"
+                        />
+                    </HorizontalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

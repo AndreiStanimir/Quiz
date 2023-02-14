@@ -21,5 +21,9 @@ namespace Quiz.Models
 
         [ObservableProperty]
         private int numberCorrectAnswers;
+        public QuizAttempt(Quiz quiz)
+        {
+            Quiz = quiz;
+        }
     }
 }

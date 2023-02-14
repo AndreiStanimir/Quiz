@@ -17,9 +17,6 @@ public class QuizContext : DbContext
 
     public string DbPath { get; }
 
-    private List<Question> questions = new List<Question>();
-    private List<Quiz> quizzes = new List<Quiz>();
-    private List<Answer> answers1 = new List<Answer>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         //modelBuilder.Entity<Question>()
@@ -31,6 +28,11 @@ public class QuizContext : DbContext
         //modelBuilder.Entity<Answer>()
         //  .HasData(answers1)
         //  ;
+        //modelBuilder
+        //modelBuilder.Entity<QuizAttempt>()
+        //    .HasOne(q=>q.Quiz)
+        //    .(q=>q.User)
+        //    .ha
     }
 
     public QuizContext()
@@ -41,7 +43,7 @@ public class QuizContext : DbContext
         Database.EnsureDeleted();
         Database.EnsureCreated();
         PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
-
+        
         //if(!File.Exists(DbPath))
         //PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
         //SaveChanges();

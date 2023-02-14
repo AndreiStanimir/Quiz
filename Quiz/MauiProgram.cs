@@ -23,7 +23,7 @@ public static class MauiProgram
             deviceId = System.Guid.NewGuid().ToString();
             Preferences.Set("my_deviceId", deviceId);
         }
-        string dbPath = System.IO.Path.Combine(FileSystem.AppDataDirectory, "quizes.db");
+        string dbPath = System.IO.Path.Combine(FileSystem.AppDataDirectory, "quizzes.db");
         //builder.Services.AddDbContext<QuizContext>(options
         //    {
         //});

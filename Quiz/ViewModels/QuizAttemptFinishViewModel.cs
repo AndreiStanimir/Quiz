@@ -15,8 +15,8 @@ namespace Quiz.ViewModels
 
         public QuizAttemptFinishViewModel()
         {
-            var context= QuizContextFactory.GetContext();
-            quizAttempt= context.QuizAttempts.First();
+            var context = QuizContextFactory.GetContext();
+            quizAttempt = context.QuizAttempts.First();
 
         }
         public QuizAttemptFinishViewModel(QuizAttempt quizAttempt)
@@ -26,7 +26,7 @@ namespace Quiz.ViewModels
 
         public bool DidUserPass()
         {
-            return quizAttempt.NumberCorrectAnswers > 80;
+            return quizAttempt.NumberCorrectAnswers >= 3;
         }
     }
 }

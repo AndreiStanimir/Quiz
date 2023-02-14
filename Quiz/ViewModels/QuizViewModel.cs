@@ -1,10 +1,6 @@
-﻿using CommunityToolkit.Maui.Core.Extensions;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 using Quiz.Models;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 
 namespace Quiz.ViewModels
@@ -21,12 +17,15 @@ namespace Quiz.ViewModels
         [ObservableProperty]
         private int correctAnswers;
 
-        IEnumerator<Question> questionsEnumerator;
+        private IEnumerator<Question> questionsEnumerator;
+
+        private Quiz.Models.Quiz quiz;
 
         public QuizViewModel()
         {
             quizContext = QuizContextFactory.GetContext();
-            questions = quizContext.Quizzes.First().Questions.ToArray();
+            quiz = quizContext.Quizzes.First();
+            questions = quiz.Questions.ToArray();
             questionsEnumerator = questions.GetEnumerator();
             GetNextQuestion();
             CorrectAnswers = 0;
@@ -35,7 +34,7 @@ namespace Quiz.ViewModels
         public QuizViewModel(int id)
         {
             quizContext = QuizContextFactory.GetContext();
-            var quiz = quizContext.Quizzes.Find(id);
+            quiz = quizContext.Quizzes.Find(id);
             questions = quiz.Questions.ToList();
             questionsEnumerator = questions.GetEnumerator();
             GetNextQuestion();
@@ -48,9 +47,10 @@ namespace Quiz.ViewModels
         {
             if (!questionsEnumerator.MoveNext())
             {
-                QuizAttempt quizAttempt = new QuizAttempt
+                QuizAttempt quizAttempt = new QuizAttempt(quiz)
                 {
                     NumberCorrectAnswers = correctAnswers,
+                    DateTime = DateTime.Now,
                 };
                 quizContext.QuizAttempts.Add(quizAttempt);
                 quizContext.SaveChanges();

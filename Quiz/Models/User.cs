@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace Quiz.Models
 {
-    public class User
+    public class User 
     {
         [Key]
         public int Id { get; set; }
 
-        public string DeviceId { get; }
+        public string DeviceId { get; set; }
         public string Username { get; }
         public string Password { get; }
 
-        public ICollection<QuizAttempt> QuizAttempts { get; set; }
+        public IEnumerable<QuizAttempt> QuizAttempts { get; set; }
     }
 }
