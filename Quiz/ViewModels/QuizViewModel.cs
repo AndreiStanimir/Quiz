@@ -47,7 +47,7 @@ namespace Quiz.ViewModels
         {
             if (!questionsEnumerator.MoveNext())
             {
-                QuizAttempt quizAttempt = new QuizAttempt(quiz)
+                QuizAttempt quizAttempt = new(quiz)
                 {
                     NumberCorrectAnswers = correctAnswers,
                     DateTime = DateTime.Now,

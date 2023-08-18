@@ -20,8 +20,8 @@ namespace Quiz.Models
         [Required]
         public virtual ICollection<Question> Questions { get; set; }
 
-        public int? BestAttemptId { get; set; }
+        //public int? BestAttemptId { get; set; }
         [ObservableProperty]
-        private QuizAttempt bestAttempt;
+        private QuizAttempt? bestAttempt;
     }
 }

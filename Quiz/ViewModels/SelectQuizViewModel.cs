@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Maui.Platform;
 using Quiz.Models;
 using Quiz.Services;
 using System;
@@ -23,10 +24,11 @@ namespace Quiz.ViewModels
             quizContext = QuizContextFactory.GetContext();
             quizzes = quizContext.Quizzes.ToObservableCollection();
             var currentUser = UserService.GetCurrentUser();
-            foreach(var quiz in quizzes)
+            foreach (var quiz in quizzes)
             {
                 quiz.BestAttempt = quizContext.QuizAttempts
-                    .Where(attempt => attempt.User.Id == currentUser.Id)
+                    .Where(q => q.Id == quiz.Id)
+                    //.Where(attempt => attempt.User.Id == currentUser.Id)
                     .OrderByDescending(attempt => attempt.NumberCorrectAnswers)
                     .FirstOrDefault();
             }

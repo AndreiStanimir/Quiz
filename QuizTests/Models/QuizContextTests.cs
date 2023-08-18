@@ -83,6 +83,7 @@ namespace Quiz.Models.Tests
         [Test]
         public void AllQuestionsHaveAtLeastCorrectOneAnswer()
         {
+            Assert.That(quizContext.Questions.All(q => q.Answers.Count() > 0));
             Assert.That(quizContext.Questions.All(q => q.CorrectAnswers.Count()>0));
         }
 

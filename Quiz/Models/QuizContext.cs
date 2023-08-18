@@ -19,6 +19,10 @@ public class QuizContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Quiz>()
+            .HasOne(q => q.BestAttempt)
+            .WithOne(b => b.Quiz)
+            .HasForeignKey<QuizAttempt>();
         //modelBuilder.Entity<Question>()
         //    .HasData(questions)
         //    ;
