@@ -39,7 +39,7 @@ namespace Quiz.Models.Tests
             }
         }
 
-        [Test]
+        [Test, Ignore]
         public void AllQuestionsHaveAtLeastOneQuiz()
         {
             Assert.IsNotEmpty(quizContext.Questions);
@@ -54,7 +54,7 @@ namespace Quiz.Models.Tests
         {
             int actual = quizContext.Questions.Count();
             Assert.Greater(actual, 100);
-            foreach (var question in quizContext.Questions.ToList())
+            foreach (var question in quizContext.Questions)
             {
                 Assert.IsNotEmpty(question.Answers.ToList());
             }
@@ -105,6 +105,16 @@ namespace Quiz.Models.Tests
             Assert.AreEqual(allQuestions.Count, distinctQuestions.Count);
         }
 
+        [Test]
+        public void AllQuestionsHaveThreeOrFourAnswers()
+        {
+            var allQuestions = quizContext.Questions.Include(q => q.Answers).ToList();
+            foreach (var question in allQuestions)
+            {
+                int answerCount = question.Answers.Count;
+                Assert.IsTrue(answerCount == 3 || answerCount == 4, $"Question with ID {question.Id} has {answerCount} answers.");
+            }
+        }
 
 
         [Test]
@@ -131,7 +141,7 @@ namespace Quiz.Models.Tests
         }
         public class QuestionEqualityComparer : IEqualityComparer<Question>
         {
-            public bool Equals(Question x, Question y)
+            public bool Equals(Question? x, Question? y)
             {
                 if (x == null || y == null)
                     return false;

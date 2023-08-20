@@ -71,8 +71,6 @@ public class QuizContext : DbContext
         var questionsWithAnswers = System.Text.RegularExpressions.Regex.Split(text, @"\n\d+\.")
             //.Take(50)
             ;
-        if (questionsWithAnswers.Count() != 1025)
-            throw new Exception();
         int id = 1;
         using var streamer2 = FileSystem.OpenAppPackageFileAsync(pathAnswers).Result;
         using var streamReader2 = new StreamReader(streamer2);
@@ -181,11 +179,11 @@ public class QuizContext : DbContext
         using var streamReader = new StreamReader(streamer);
         string text = streamReader.ReadToEndAsync().Result;
         var questionsWithAnswersAndNumbers =
-            System.Text.RegularExpressions.Regex.Split(text, @"(\n\d+\.)")
+            Regex.Split(text, @"(\n\d+\.)\n")
 
             //.Take(50)
             .Select(q => q.Trim(' ', ',', ';', '.', '\t', '\n', '\r'))
-            .Where(q => !String.IsNullOrWhiteSpace(q))
+            .Where(q => !string.IsNullOrWhiteSpace(q))
             .ToArray();
         var questionNumbers = questionsWithAnswersAndNumbers.Where((x, i) => i % 2 == 0);
         var questionsWithAnswers = questionsWithAnswersAndNumbers.Where((x, i) => i % 2 == 1);

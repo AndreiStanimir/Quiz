@@ -75,7 +75,7 @@ b. sangele tasneste sincron cu sistola cardiaca
      a. vasoconstrictie
      b. anxietate
      c. lipsa de oxigenare a creierului.
- 17. Care din semnele de mai jos sunt relevante intr-o hemoptizie:
+17. Care din semnele de mai jos sunt relevante intr-o hemoptizie:
      a. sangele din hemoptizie este incoagulabil
      b. bolnavul de hemoptizie are o senzatie de caldura retrosternala
      c. sangele se evacueaza prin varsatura.
@@ -1017,16 +1017,14 @@ a. paralizia flasca a membrelor inferioare cu reflexe abolite, atrofii si tulbur
 
 
 204. Nevritele se datoresc:
-     a. unor  viroze, compresiuni (fracturi, tumori) sau unor traumatisme ale nervilor
+     a. unor viroze, compresiuni (fracturi, tumori) sau unor traumatisme ale nervilor
      b. unui tratament insuficient
      c. unui proces inflamator local
 
-
- 205. Paralizia faciala este caracterizata prin:
+205. Paralizia faciala este caracterizata prin:
      a. deficit motor la nivelul degetelor, în special  a policelui
      b. tulburari motorii, senzitive si trofice
      c. stergerea cutelor fruntii de partea bolnava, imposibilitatea închiderii complete a ochiului, deviatia gurii spre partea sanatoasa, imposibilitatea de a fluiera.
-
 
 206. Tratamentul paraliziei  nervilor este:
      a. în primul rând etiologic, eventual chirurgical sau ortopedic
@@ -1456,7 +1454,7 @@ cand orificiul de perforatie se face pe un ulcer netratat
 cand orificiul de perforatie se deschide in stomacul plin
 
 
-278Angiocolitele sunt afectiuni inflamatorii:
+278.Angiocolitele sunt afectiuni inflamatorii:
 ale colecistului
 ale cailor biliare extra si intra hepatice
 ale colecistului si ale cailor biliare
@@ -3456,7 +3454,7 @@ sa îndeparteaza mult mai simpla si mai usor
 înfasarea se va face compresiv pentru a mentine pansamentul 
 
 
-665Când se executa înfasarea sub forma de spic (spica)?
+665.Când se executa înfasarea sub forma de spic (spica)?
 pentru realizarea unei compresiuni asupra unei articulatii
 pentru a mentine un pansament în care se fac miscari ample
 pentru mentinerea pansamentului la nivelul nasului si barbiei
@@ -4613,11 +4611,11 @@ spontan sau sub influenta tratamentului;
 este viscoasa, albicioasa ( perlata);
  bogata in eozinofile, cristale Charcot- Leyden si spirale Curschman;
  este fluida, rozacee si in cantitate mare;
-914.In astmul bronsic sint folosite, in scop profilactic urmatoarele medicamente:
+914. In astmul bronsic sint folosite, in scop profilactic urmatoarele medicamente:
  miofilin
   ketotifen;
  cromoglicat disodic;
- 915.In tratamentul astmului bronsic, corticoterapia:
+915.In tratamentul astmului bronsic, corticoterapia:
  trebuie rezervata  formelor  grave;
 este tratamentul cel mai eficace;
   administrata pe cale orala, nu prezinta riscuri;
