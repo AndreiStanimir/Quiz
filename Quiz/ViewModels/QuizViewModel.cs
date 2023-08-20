@@ -23,7 +23,7 @@ namespace Quiz.ViewModels
 
         public QuizViewModel()
         {
-            quizContext = QuizContextFactory.GetContext();
+            quizContext = QuizContextFactory.GetContextAsync().Result;
             quiz = quizContext.Quizzes.First();
             questions = quiz.Questions.ToArray();
             questionsEnumerator = questions.GetEnumerator();
@@ -33,7 +33,7 @@ namespace Quiz.ViewModels
 
         public QuizViewModel(int id)
         {
-            quizContext = QuizContextFactory.GetContext();
+            quizContext = QuizContextFactory.GetContextAsync().Result;
             quiz = quizContext.Quizzes.Find(id);
             questions = quiz.Questions.ToList();
             questionsEnumerator = questions.GetEnumerator();

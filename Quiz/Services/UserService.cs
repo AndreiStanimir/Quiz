@@ -9,16 +9,16 @@ namespace Quiz.Services
 {
     public static class UserService
     {
-        public static User GetCurrentUser()
+        public static async Task<User> GetCurrentUserAsync()
         {
             string currenctUserId = Preferences.Get("my_deviceId",Guid.NewGuid().ToString());
-            QuizContext context = QuizContextFactory.GetContext();
+            QuizContext context = await QuizContextFactory.GetContextAsync();
             var user=context.Users.FirstOrDefault(u => u.DeviceId == currenctUserId);
             if (user == default)
             {
                 user = new User() { DeviceId = currenctUserId };
                 context.Users.Add(user);
-                context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             return user;
 

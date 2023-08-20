@@ -15,7 +15,7 @@ namespace Quiz.ViewModels
 
         public QuizAttemptFinishViewModel()
         {
-            var context = QuizContextFactory.GetContext();
+            var context = QuizContextFactory.GetContextAsync().Result;
             quizAttempt = context.QuizAttempts.First();
 
         }

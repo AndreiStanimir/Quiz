@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Quiz.Models;
 
@@ -46,8 +47,7 @@ public class QuizContext : DbContext
         DbPath = @"C:\Users\andrei.stanimir\Source\Repos\AndreiStanimir\Quiz\QuizTests\Resources\quizzes.db";
         Database.EnsureDeleted();
         Database.EnsureCreated();
-        PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
-        
+
         //if(!File.Exists(DbPath))
         //PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
         //SaveChanges();
@@ -63,23 +63,23 @@ public class QuizContext : DbContext
 
         //Database.EnsureCreated();
     }
-    public void PopulateDB(string pathQuestions, string pathAnswers, int numberOfQuizes)
+    private static readonly Regex QuestionSplitRegex = new(@"\n\d+\.", RegexOptions.Compiled);
+
+    public async Task PopulateDB(string pathQuestions, string pathAnswers, int numberOfQuizes)
     {
-        using var streamer = FileSystem.OpenAppPackageFileAsync(pathQuestions).Result;
+        using var streamer = await FileSystem.OpenAppPackageFileAsync(pathQuestions);
         using var streamReader = new StreamReader(streamer);
-        string text = streamReader.ReadToEndAsync().Result;
-        var questionsWithAnswers = System.Text.RegularExpressions.Regex.Split(text, @"\n\d+\.")
-            //.Take(50)
-            ;
+        string text = await streamReader.ReadToEndAsync();
+        var questionsWithAnswers = QuestionSplitRegex.Split(text);
+
         int id = 1;
-        using var streamer2 = FileSystem.OpenAppPackageFileAsync(pathAnswers).Result;
+        using var streamer2 = await FileSystem.OpenAppPackageFileAsync(pathAnswers);
         using var streamReader2 = new StreamReader(streamer2);
-        var correctAnswers = streamReader2.ReadToEndAsync().Result.Split('\n')
-            //.Take(53)
+        var correctAnswers = (await streamReader2.ReadToEndAsync()).Split('\n')
             .Select(line => line.Trim().Split(" "));
 
-        SaveChanges();
-        Dictionary<int, string> correctAnswersDic = new Dictionary<int, string>(correctAnswers.Count());
+        await SaveChangesAsync(); // Assuming there's an asynchronous version of SaveChanges
+        Dictionary<int, string> correctAnswersDic = new(correctAnswers.Count());
         foreach (var correctAnswer in correctAnswers)
         {
             correctAnswersDic[int.Parse(correctAnswer[0].Trim())] = correctAnswer[1].Trim();
@@ -94,8 +94,8 @@ public class QuizContext : DbContext
             var questionAnswers = questionWithAnswerSplit.Skip(1)
                 .Select(a => Regex.Replace(a.Trim(), "^ *[a-d]\\.", "", RegexOptions.Compiled))
                 .ToArray();
-            List<Answer> answers=new List<Answer>();
-            for (int i = 0; i < questionAnswers.Count(); i++)
+            List<Answer> answers = new List<Answer>();
+            for (int i = 0; i < questionAnswers.Length; i++)
             {
                 char currentAnswerLetter = (char)('a' + i);
                 var answer = questionAnswers[i];
@@ -103,62 +103,47 @@ public class QuizContext : DbContext
                 {
                     Text = answer,
                     Correct = correctAnswersDic[id].Contains(currentAnswerLetter)
-                }
-                );
+                });
             }
-                
-            Question question = new Question(new System.Collections.ObjectModel.ObservableCollection<Answer>(answers))
+
+            Question question = new Question(new ObservableCollection<Answer>(answers))
             {
-                //Id = id.ToString(),
                 Text = questionWithAnswerSplit.First().Trim(),
             };
             Debug.Assert(question.CorrectAnswers.Count() > 0);
-            //questionAnswers.ToList().ForEach(a=>a.Question=question);
             Answers.AddRange(question.Answers);
-            //SaveChanges();
             Questions.Add(question);
-            //SaveChanges();
         }
-        SaveChanges();
-        var quizes = GenerateQuizzes(Questions.ToList(), numberOfQuizes);
-        Quizzes.AddRange(quizes);
-        SaveChanges();
+        await SaveChangesAsync();
+        var quizes = await GenerateQuizzes(Questions.ToList(), numberOfQuizes); // Assuming GenerateQuizzes is async
+        await Quizzes.AddRangeAsync(quizes); // Assuming AddRangeAsync exists
+        await SaveChangesAsync();
+
+        // Assuming there's an asynchronous version of SaveChanges and BulkSaveChanges
+        await this.SaveChangesAsync();
+        await this.BulkSaveChangesAsync();
         
-        //Questions.ForEachAsync(q =>
-        //{
-        //    Quizzes.Where(quiz => q.Id == quiz.Id)
-        //    .ForEachAsync(quiz =>
-        //        q.Quizzes.Add(quiz));
-        //}
-        //);
-        this.SaveChanges();
-        this.BulkSaveChanges();
     }
 
-    private ICollection<Quiz> GenerateQuizzes(IList<Question> questions, int numberOfQuizes, int numberOfQuestionsPerQuiz = 5)
+    private async Task<ICollection<Quiz>> GenerateQuizzes(IList<Question> questions, int numberOfQuizes, int numberOfQuestionsPerQuiz = 5)
     {
-        if (questions.Count < numberOfQuestionsPerQuiz)
-            throw new Exception("Not enough questions to generate quizzes.");
-
-        questions.Shuffle();
+        await questions.ShuffleAsync();
 
         ICollection<Quiz> generatedQuizes = new List<Quiz>(numberOfQuizes);
         List<Question[]> quizzesQuestions = new();
-
         while (quizzesQuestions.Count < numberOfQuizes)
         {
-            questions.Shuffle();
-            quizzesQuestions.AddRange(Enumerable.Chunk<Question>(questions, numberOfQuestionsPerQuiz).);
+            await questions.ShuffleAsync();
+            quizzesQuestions.AddRange(Enumerable.Chunk<Question>(questions.Skip(questions.Count % numberOfQuestionsPerQuiz), numberOfQuestionsPerQuiz));
         }
-
         if (quizzesQuestions.Any(q => q.Length != numberOfQuestionsPerQuiz))
-            throw new Exception("Some quizzes do not have the required number of questions.");
-
+            throw new Exception("quiz questions was not 100");
         for (int id = 0; id < numberOfQuizes; id++)
         {
-            var currentQuizQuestions = quizzesQuestions[id].ToList();
+            var currentQuizQuestions = quizzesQuestions[id].Take(100).ToList();
             var currentQuiz = new Quiz
             {
+                //Id = id,
                 Questions = currentQuizQuestions,
                 QuizName = "Quiz " + id
             };
@@ -172,48 +157,106 @@ public class QuizContext : DbContext
     // The following configures EF to create a Sqlite database file in the
     // special "local" folder for your platform.
     protected override void OnConfiguring(DbContextOptionsBuilder options)
-        => options.UseSqlite($"Data Source={DbPath}");
+        => options.UseSqlite($"Data Source={DbPath};Pooling=False;");
 
     public User GetCurrentUser { get; set; }
 
-    public RawReadFiles ReadFiles(string pathQuestions, string pathAnswers)
+    public async Task<RawReadFiles> ReadFilesAsync(string pathQuestions, string pathAnswers)
     {
-        using var streamer = FileSystem.OpenAppPackageFileAsync(pathQuestions).Result;
-        using var streamReader = new StreamReader(streamer);
-        string text = streamReader.ReadToEndAsync().Result;
-        var questionsWithAnswersAndNumbers =
-            Regex.Split(text, @"(\n\d+\.)\n")
+        // Read both files concurrently
+        var readQuestionsTask = ReadFileAsync(pathQuestions);
+        var readAnswersTask = ReadFileAsync(pathAnswers);
 
-            //.Take(50)
+        await Task.WhenAll(readQuestionsTask, readAnswersTask);
+
+        var questionsText = readQuestionsTask.Result;
+        var answersText = readAnswersTask.Result;
+
+        var questionsWithAnswersAndNumbers =
+            Regex.Split(questionsText, @"(\n\d+\.)\n")
             .Select(q => q.Trim(' ', ',', ';', '.', '\t', '\n', '\r'))
             .Where(q => !string.IsNullOrWhiteSpace(q))
             .ToArray();
-        var questionNumbers = questionsWithAnswersAndNumbers.Where((x, i) => i % 2 == 0);
-        var questionsWithAnswers = questionsWithAnswersAndNumbers.Where((x, i) => i % 2 == 1);
-        if (questionsWithAnswers.Count() != 1023)
-            throw new Exception();
-        using var streamer2 = FileSystem.OpenAppPackageFileAsync(pathAnswers).Result;
-        using var streamReader2 = new StreamReader(streamer2);
-        var correctAnswers = streamReader2.ReadToEndAsync().Result.Split('\n');
 
-        return new RawReadFiles(questionsWithAnswers.ToArray(), correctAnswers, questionNumbers.ToArray());
+        string[] questionNumbers = null, questionsWithAnswers = null;
+
+        // Parallelize the processing of the data
+        Parallel.Invoke(
+            () => questionNumbers = questionsWithAnswersAndNumbers.Where((x, i) => i % 2 == 0).ToArray(),
+            () => questionsWithAnswers = questionsWithAnswersAndNumbers.Where((x, i) => i % 2 == 1).ToArray()
+        );
+
+        var correctAnswers = answersText.Split('\n');
+
+        return new RawReadFiles(questionsWithAnswers, correctAnswers, questionNumbers);
     }
+
+    private async Task<string> ReadFileAsync(string path)
+    {
+        using var streamer = await FileSystem.OpenAppPackageFileAsync(path);
+        using var streamReader = new StreamReader(streamer);
+        return await streamReader.ReadToEndAsync();
+    }
+
 }
 
-internal static class ExtensionsClass
+public static class ListExtensions
 {
-    public static void Shuffle<T>(this IList<T> list)
+    public static async Task ShuffleAsync<T>(this IList<T> list)
     {
-        Random rng = new(Environment.TickCount);
-        int n = list.Count;
+        int numberOfChunks = Environment.ProcessorCount; // Number of CPU cores
+
+        var chunks = SplitList(list, numberOfChunks);
+
+        var tasks = chunks.Select(chunk => Task.Run(() => ShuffleChunk(chunk))).ToArray();
+
+        await Task.WhenAll(tasks);
+
+        // Merge the shuffled chunks
+        var shuffledList = new List<T>();
+        foreach (var chunk in chunks)
+        {
+            shuffledList.AddRange(chunk);
+        }
+
+        // Copy the shuffled items back to the original list
+        for (int i = 0; i < list.Count; i++)
+        {
+            list[i] = shuffledList[i];
+        }
+    }
+
+    private static void ShuffleChunk<T>(IList<T> chunk)
+    {
+        Random rng = new Random(Environment.TickCount);
+        int n = chunk.Count;
         while (n > 1)
         {
             n--;
             int k = rng.Next(n + 1);
-            T value = list[k];
-            list[k] = list[n];
-            list[n] = value;
+            T value = chunk[k];
+            chunk[k] = chunk[n];
+            chunk[n] = value;
         }
+    }
+
+    private static List<T>[] SplitList<T>(IList<T> list, int numberOfChunks)
+    {
+        int sizeOfChunk = list.Count / numberOfChunks;
+        var chunks = new List<T>[numberOfChunks];
+
+        for (int i = 0; i < numberOfChunks; i++)
+        {
+            chunks[i] = new List<T>();
+            int chunkStart = i * sizeOfChunk;
+            int chunkEnd = (i == numberOfChunks - 1) ? list.Count : chunkStart + sizeOfChunk;
+            for (int j = chunkStart; j < chunkEnd; j++)
+            {
+                chunks[i].Add(list[j]);
+            }
+        }
+
+        return chunks;
     }
 }
 
