@@ -19,10 +19,11 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '6.x'  # Use .NET 6.x SDK
+        dotnet-version: '7.x'  # Use .NET 6.x SDK
     
-    - name: Install .NET Workloads
-      run: dotnet workload install maui-tizen --skip-manifest-update
+    
+    #- name: Install .NET Workloads
+    #  run: dotnet workload install maui-tizen --skip-manifest-update
     
     - name: Restore Workloads
       run: dotnet workload restore
