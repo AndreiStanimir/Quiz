@@ -12,6 +12,7 @@ public partial class QuizPage : ContentPage
 {
     ButtonAnswer[] buttonsAnswers;
     QuizViewModel ViewModel;
+    QuizContext context;
     //QuizViewModel viewModel
     //{
     //    get =>
@@ -33,15 +34,15 @@ public partial class QuizPage : ContentPage
         //}
         //labelCorrectAnswers.SetBinding(ContentProperty, new Binding("CorrectAnswers"));
         //ans1.SetBinding(ContentProperty, new Binding())
-        BindingContext = ViewModel = new QuizViewModel();
-
+        //BindingContext = ViewModel = new QuizViewModel(1);
         //ViewModel.GetNextQuestion();
     }
 
     public QuizPage(int id)
     {
         InitializeComponent();
-        BindingContext = ViewModel = new QuizViewModel(id);
+        BindingContext = ViewModel = new QuizViewModel(context);
+        ViewModel.SetQuiz(id);
     }
 
     void GetNextQuestion()
@@ -52,7 +53,7 @@ public partial class QuizPage : ContentPage
         if (gameEnded)
         {
             Navigation.PopAsync();
-            Navigation.PushAsync(new QuizAttemptFinalPage(new QuizAttemptFinishViewModel()));
+            Navigation.PushAsync(new QuizAttemptFinalPage(new QuizAttemptFinishViewModel(context)));
         };
         var question = ViewModel.CurrentQuestion;
         //LabelQuestion.Text = question.Text;

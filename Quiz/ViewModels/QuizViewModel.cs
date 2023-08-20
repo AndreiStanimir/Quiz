@@ -24,21 +24,15 @@ namespace Quiz.ViewModels
         public QuizViewModel(QuizContext quizContext)
         {
             this.quizContext = quizContext;
-            quiz = quizContext.Quizzes.First();
             questions = quiz.Questions.ToArray();
             questionsEnumerator = questions.GetEnumerator();
             GetNextQuestion();
             CorrectAnswers = 0;
         }
 
-        public QuizViewModel(QuizContext quizContext, int id)
+        public void SetQuiz(int id)
         {
-            this.quizContext = quizContext;
             quiz = quizContext.Quizzes.Find(id);
-            questions = quiz.Questions.ToList();
-            questionsEnumerator = questions.GetEnumerator();
-            GetNextQuestion();
-            correctAnswers = 0;
         }
 
         //[RelayCommand]
