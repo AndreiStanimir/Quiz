@@ -21,9 +21,9 @@ namespace Quiz.ViewModels
 
         private Quiz.Models.Quiz quiz;
 
-        public QuizViewModel()
+        public QuizViewModel(QuizContext quizContext)
         {
-            quizContext = QuizContextFactory.GetContextAsync().Result;
+            this.quizContext = quizContext;
             quiz = quizContext.Quizzes.First();
             questions = quiz.Questions.ToArray();
             questionsEnumerator = questions.GetEnumerator();
@@ -31,9 +31,9 @@ namespace Quiz.ViewModels
             CorrectAnswers = 0;
         }
 
-        public QuizViewModel(int id)
+        public QuizViewModel(QuizContext quizContext, int id)
         {
-            quizContext = QuizContextFactory.GetContextAsync().Result;
+            this.quizContext = quizContext;
             quiz = quizContext.Quizzes.Find(id);
             questions = quiz.Questions.ToList();
             questionsEnumerator = questions.GetEnumerator();

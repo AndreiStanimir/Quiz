@@ -12,12 +12,11 @@ namespace Quiz.ViewModels
     {
         [ObservableProperty]
         private QuizAttempt quizAttempt;
-
-        public QuizAttemptFinishViewModel()
+        private QuizContext context;
+        public QuizAttemptFinishViewModel(QuizContext context)
         {
-            var context = QuizContextFactory.GetContextAsync().Result;
+            this.context = context;
             quizAttempt = context.QuizAttempts.First();
-
         }
         public QuizAttemptFinishViewModel(QuizAttempt quizAttempt)
         {

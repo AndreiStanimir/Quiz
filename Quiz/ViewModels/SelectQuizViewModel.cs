@@ -19,11 +19,11 @@ namespace Quiz.ViewModels
         private ObservableCollection<Quiz.Models.Quiz> quizzes;
         [ObservableProperty]
         public ObservableCollection<QuizAttempt> attempts;
-        public SelectQuizViewModel()
+        public SelectQuizViewModel(QuizContext quizContext)
         {
-            quizContext = QuizContextFactory.GetContextAsync().Result;
+            this.quizContext = quizContext;
             quizzes = quizContext.Quizzes.ToObservableCollection();
-            var currentUser = UserService.GetCurrentUserAsync();
+            //var currentUser = UserService.GetCurrentUserAsync(this.quizContext);
             foreach (var quiz in quizzes)
             {
                 quiz.BestAttempt = quizContext.QuizAttempts
@@ -32,6 +32,7 @@ namespace Quiz.ViewModels
                     .OrderByDescending(attempt => attempt.NumberCorrectAnswers)
                     .FirstOrDefault();
             }
+
         }
     }
 }

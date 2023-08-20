@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace Quiz.Services
 {
-    public static class UserService
+    public class UserService
     {
-        public static async Task<User> GetCurrentUserAsync()
+        QuizContext context;
+        public async Task<User> GetCurrentUserAsync(QuizContext context)
         {
-            string currenctUserId = Preferences.Get("my_deviceId",Guid.NewGuid().ToString());
-            QuizContext context = await QuizContextFactory.GetContextAsync();
-            var user=context.Users.FirstOrDefault(u => u.DeviceId == currenctUserId);
+            this.context = context;
+            string currenctUserId = Preferences.Get("my_deviceId", Guid.NewGuid().ToString());
+            var user = context.Users.FirstOrDefault(u => u.DeviceId == currenctUserId);
             if (user == default)
             {
                 user = new User() { DeviceId = currenctUserId };
