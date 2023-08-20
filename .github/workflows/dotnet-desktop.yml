@@ -1,0 +1,38 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main  # or the name of your default branch
+  pull_request:
+    branches:
+      - main  # or the name of your default branch
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest  # Assuming your project is a .NET project that requires Windows
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.x'  # Use .NET 6.x SDK
+    
+    - name: Install .NET Workloads
+      run: dotnet workload install maui-tizen --skip-manifest-update
+    
+    - name: Restore Workloads
+      run: dotnet workload restore
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --no-restore
+    
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+
