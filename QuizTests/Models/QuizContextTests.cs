@@ -10,6 +10,7 @@ using System.Diagnostics;
 using NUnit.Framework;
 using Castle.Core.Internal;
 using Microsoft.VisualBasic;
+using Microsoft.EntityFrameworkCore;
 
 namespace Quiz.Models.Tests
 {
@@ -22,7 +23,7 @@ namespace Quiz.Models.Tests
         {
             var dbPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "Resources", "quizzes.db");
             Assert.That(File.Exists(dbPath), Is.True);
-            quizContext = QuizContextFactory.GetContext(@"C:\Users\andre\source\repos\AndreiStanimir\Quiz\QuizTests\Resources\quizzes.db");
+            quizContext = QuizContextFactory.GetContext(dbPath);
         }
 
         [Test]
@@ -44,7 +45,7 @@ namespace Quiz.Models.Tests
             Assert.IsNotEmpty(quizContext.Questions);
             foreach (var question in quizContext.Questions)
             {
-                Assert.True(question.Quizzes.Count > 0);
+                Assert.IsNotEmpty(question.Quizzes);
             }
         }
 
@@ -52,10 +53,10 @@ namespace Quiz.Models.Tests
         public void HasMinimumQuestions()
         {
             int actual = quizContext.Questions.Count();
-            Assert.True(actual > 100);
+            Assert.Greater(actual, 100);
             foreach (var question in quizContext.Questions.ToList())
             {
-                Assert.True(question.Answers.ToList().Any());
+                Assert.IsNotEmpty(question.Answers.ToList());
             }
             var uniqueQuestions = quizContext.Questions.ToList().Distinct((IEqualityComparer<Question>)new QuestionEqualityComparer());
             uniqueQuestions.Where(q => quizContext.Questions.Contains(q));
@@ -86,23 +87,78 @@ namespace Quiz.Models.Tests
             Assert.That(quizContext.Questions.All(q => q.Answers.Count() > 0));
             Assert.That(quizContext.Questions.All(q => q.CorrectAnswers.Count()>0));
         }
-
-        private class QuestionEqualityComparer : EqualityComparer<Question>
+        [Test]
+        public void AllAnswersHaveValidText()
         {
-            public override bool Equals(Question? b1, Question? b2)
+            Assert.That(quizContext.Answers.All(a => !string.IsNullOrEmpty(a.Text)));
+        }
+
+        [Test]
+        public void NoDuplicateQuestions()
+        {
+            // First, retrieve all questions from the database
+            var allQuestions = quizContext.Questions.Include(q => q.Answers).ToList();
+
+            // Then, perform the Distinct operation on the client side
+            var distinctQuestions = allQuestions.Distinct(new QuestionEqualityComparer()).ToList();
+
+            Assert.AreEqual(allQuestions.Count, distinctQuestions.Count);
+        }
+
+
+
+        [Test]
+        public void NoDuplicateAnswersForAQuestion()
+        {
+            bool noDuplicates = quizContext.Questions.All(q =>
+                q.Answers.Select(a => a.Text).Distinct().Count() == q.Answers.Count);
+            Assert.IsTrue(noDuplicates);
+        }
+
+        [Test]
+        public void AllQuizzesHaveUniqueQuestions()
+        {
+            bool areUnique = quizContext.Quizzes.All(quiz =>
+                quiz.Questions.Distinct().Count() == quiz.Questions.Count);
+            Assert.IsTrue(areUnique);
+        }
+
+        [Test]
+        public void AllQuestionsHaveValidNumberRange()
+        {
+            // Assuming 0 to 10000 is the valid range
+            Assert.That(quizContext.Questions.All(q => q.Number >= 0 && q.Number <= 10000));
+        }
+        public class QuestionEqualityComparer : IEqualityComparer<Question>
+        {
+            public bool Equals(Question x, Question y)
             {
-                if (b1 == null && b2 == null)
-                    return true;
-                else if (b1 == null || b2 == null)
+                if (x == null || y == null)
                     return false;
 
-                return b1.Text == b2.Text &&
-                    Enumerable.SequenceEqual(b1.Answers, b2.Answers);
+                if (x.Text != y.Text)
+                    return false;
+
+                if (x.Answers.Count != y.Answers.Count)
+                    return false;
+
+                return x.Answers.OrderBy(a => a.Text).SequenceEqual(y.Answers.OrderBy(a => a.Text));
             }
 
-            public override int GetHashCode([DisallowNull] Question obj)
+            public int GetHashCode(Question obj)
             {
-                return obj.Text.GetHashCode();
+                unchecked
+                {
+                    int hashText = obj.Text == null ? 0 : obj.Text.GetHashCode();
+                    int hashAnswers = 0;
+
+                    foreach (var answer in obj.Answers)
+                    {
+                        hashAnswers ^= answer.Text.GetHashCode();
+                    }
+
+                    return hashText ^ hashAnswers;
+                }
             }
         }
     }
