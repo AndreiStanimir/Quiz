@@ -12,16 +12,16 @@ using System.Threading.Tasks;
 
 namespace Quiz.ViewModels
 {
-    partial class SelectQuizViewModel : ObservableObject
+    public partial class SelectQuizViewModel : ObservableObject
     {
         QuizContext quizContext;
         [ObservableProperty]
         private ObservableCollection<Quiz.Models.Quiz> quizzes;
         [ObservableProperty]
         public ObservableCollection<QuizAttempt> attempts;
-        public SelectQuizViewModel(QuizContext quizContext)
+        public SelectQuizViewModel()
         {
-            this.quizContext = quizContext;
+            this.quizContext = QuizContextFactory.GetContextAsync().Result;
             quizzes = quizContext.Quizzes.ToObservableCollection();
             //var currentUser = UserService.GetCurrentUserAsync(this.quizContext);
             foreach (var quiz in quizzes)
