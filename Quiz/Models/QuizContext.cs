@@ -43,7 +43,7 @@ public class QuizContext : DbContext
     {
         //var folder = Environment.SpecialFolder.LocalApplicationData;
         //var path = Environment.GetFolderPath(folder);
-        DbPath = @"C:\Users\andre\source\repos\AndreiStanimir\Quiz\QuizTests\Resources\quizzes.db";
+        DbPath = @"C:\Users\andrei.stanimir\Source\Repos\AndreiStanimir\Quiz\QuizTests\Resources\quizzes.db";
         Database.EnsureDeleted();
         Database.EnsureCreated();
         PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
@@ -125,7 +125,7 @@ public class QuizContext : DbContext
         var quizes = GenerateQuizes(Questions.ToList(), numberOfQuizes);
         Quizzes.AddRange(quizes);
         SaveChanges();
-
+        
         //Questions.ForEachAsync(q =>
         //{
         //    Quizzes.Where(quiz => q.Id == quiz.Id)
@@ -134,6 +134,7 @@ public class QuizContext : DbContext
         //}
         //);
         this.SaveChanges();
+        this.BulkSaveChanges();
     }
 
     private ICollection<Quiz> GenerateQuizes(IList<Question> questions, int numberOfQuizes, int numberOfQuestionsPerQuiz = 5)
@@ -172,10 +173,6 @@ public class QuizContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlite($"Data Source={DbPath}");
 
-
-
-
-
     public User GetCurrentUser { get; set; }
 
     public RawReadFiles ReadFiles(string pathQuestions, string pathAnswers)
@@ -206,7 +203,7 @@ internal static class ExtensionsClass
 {
     public static void Shuffle<T>(this IList<T> list)
     {
-        System.Random rng = new System.Random(Environment.TickCount);
+        Random rng = new(Environment.TickCount);
         int n = list.Count;
         while (n > 1)
         {
