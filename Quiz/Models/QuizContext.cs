@@ -120,7 +120,7 @@ public class QuizContext : DbContext
             //SaveChanges();
         }
         SaveChanges();
-        var quizes = GenerateQuizes(Questions.ToList(), numberOfQuizes);
+        var quizes = GenerateQuizzes(Questions.ToList(), numberOfQuizes);
         Quizzes.AddRange(quizes);
         SaveChanges();
         
@@ -135,27 +135,30 @@ public class QuizContext : DbContext
         this.BulkSaveChanges();
     }
 
-    private ICollection<Quiz> GenerateQuizes(IList<Question> questions, int numberOfQuizes, int numberOfQuestionsPerQuiz = 5)
+    private ICollection<Quiz> GenerateQuizzes(IList<Question> questions, int numberOfQuizes, int numberOfQuestionsPerQuiz = 5)
     {
-        if (questions.Count < 100)
-            throw new Exception();
+        if (questions.Count < numberOfQuestionsPerQuiz)
+            throw new Exception("Not enough questions to generate quizzes.");
+
         questions.Shuffle();
 
         ICollection<Quiz> generatedQuizes = new List<Quiz>(numberOfQuizes);
         List<Question[]> quizzesQuestions = new();
+
         while (quizzesQuestions.Count < numberOfQuizes)
         {
             questions.Shuffle();
-            quizzesQuestions.AddRange(Enumerable.Chunk<Question>(questions.Skip(questions.Count % numberOfQuestionsPerQuiz), numberOfQuestionsPerQuiz));
+            quizzesQuestions.AddRange(Enumerable.Chunk<Question>(questions, numberOfQuestionsPerQuiz).);
         }
+
         if (quizzesQuestions.Any(q => q.Length != numberOfQuestionsPerQuiz))
-            throw new Exception("quiz questions was not 100");
+            throw new Exception("Some quizzes do not have the required number of questions.");
+
         for (int id = 0; id < numberOfQuizes; id++)
         {
-            var currentQuizQuestions = quizzesQuestions[id].Take(100).ToList();
+            var currentQuizQuestions = quizzesQuestions[id].ToList();
             var currentQuiz = new Quiz
             {
-                //Id = id,
                 Questions = currentQuizQuestions,
                 QuizName = "Quiz " + id
             };

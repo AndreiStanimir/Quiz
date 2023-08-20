@@ -39,7 +39,7 @@ namespace Quiz.Models.Tests
             }
         }
 
-        [Test, Ignore]
+        [Test]
         public void AllQuestionsHaveAtLeastOneQuiz()
         {
             Assert.IsNotEmpty(quizContext.Questions);
