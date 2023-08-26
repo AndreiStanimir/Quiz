@@ -199,6 +199,12 @@ public class QuizContext : DbContext
 
         return new RawReadFiles(questionsWithAnswers.ToArray(), correctAnswers, questionNumbers.ToArray());
     }
+    public override void Dispose()
+    {
+        SaveChanges(); // Save any pending changes to the database
+        Database.ExecuteSqlRaw("PRAGMA wal_checkpoint(FULL);");
+        base.Dispose(); // Call the base Dispose method
+    }
 }
 
 internal static class ExtensionsClass

@@ -22,6 +22,7 @@ namespace Quiz.ViewModels
 
         private Quiz.Models.Quiz quiz;
         public QuizAttempt quizAttempt { get; private set; }
+        //inject quizcontext using dependency injection
         public QuizViewModel()
         {
             this.quizContext = QuizContextFactory.GetContext();
