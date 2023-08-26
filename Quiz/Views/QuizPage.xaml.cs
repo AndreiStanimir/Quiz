@@ -41,7 +41,7 @@ public partial class QuizPage : ContentPage
     public QuizPage(int id)
     {
         InitializeComponent();
-        BindingContext = ViewModel = new QuizViewModel(context);
+        BindingContext = ViewModel = new QuizViewModel();
         ViewModel.SetQuiz(id);
     }
 
@@ -52,8 +52,9 @@ public partial class QuizPage : ContentPage
         bool gameEnded = !ViewModel.GetNextQuestion();
         if (gameEnded)
         {
+
             Navigation.PopAsync();
-            Navigation.PushAsync(new QuizAttemptFinalPage(new QuizAttemptFinishViewModel()));
+            Navigation.PushAsync(new QuizAttemptFinalPage(new QuizAttemptFinishViewModel(ViewModel.quizAttempt)));
         };
         var question = ViewModel.CurrentQuestion;
         //LabelQuestion.Text = question.Text;

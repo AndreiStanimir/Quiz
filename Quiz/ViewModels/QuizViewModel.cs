@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 using Quiz.Models;
+using Quiz.Services;
 using System.Diagnostics;
 
 namespace Quiz.ViewModels
@@ -20,8 +21,8 @@ namespace Quiz.ViewModels
         private IEnumerator<Question> questionsEnumerator;
 
         private Quiz.Models.Quiz quiz;
-
-        public QuizViewModel(QuizContext quizContext)
+        public QuizAttempt quizAttempt { get; private set; }
+        public QuizViewModel()
         {
             this.quizContext = QuizContextFactory.GetContext();
             quiz = quizContext.Quizzes.First();
@@ -43,10 +44,11 @@ namespace Quiz.ViewModels
         {
             if (!questionsEnumerator.MoveNext())
             {
-                QuizAttempt quizAttempt = new(quiz)
+                quizAttempt = new(quiz)
                 {
-                    NumberCorrectAnswers = correctAnswers,
+                    NumberCorrectAnswers = CorrectAnswers,
                     DateTime = DateTime.Now,
+                    User=UserService.GetCurrentUser(),
                 };
                 quizContext.QuizAttempts.Add(quizAttempt);
                 quizContext.SaveChanges();

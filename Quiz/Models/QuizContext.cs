@@ -44,9 +44,9 @@ public class QuizContext : DbContext
         //var folder = Environment.SpecialFolder.LocalApplicationData;
         //var path = Environment.GetFolderPath(folder);
         DbPath = @"C:\Users\andre\source\repos\AndreiStanimir\Quiz\QuizTests\Resources\quizzes.db";
-        Database.EnsureDeleted();
-        Database.EnsureCreated();
-        PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
+        //Database.EnsureDeleted();
+        //Database.EnsureCreated();
+        //PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
         
         //if(!File.Exists(DbPath))
         //PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
@@ -63,6 +63,7 @@ public class QuizContext : DbContext
 
         //Database.EnsureCreated();
     }
+    // make the following method async
     public void PopulateDB(string pathQuestions, string pathAnswers, int numberOfQuizes)
     {
         using var streamer = FileSystem.OpenAppPackageFileAsync(pathQuestions).Result;
@@ -227,5 +228,16 @@ public record struct RawReadFiles(string[] questionsWithAnswers, string[] correc
     public static implicit operator RawReadFiles((string[] questionsWithAnswers, string[] correctAnswers, string[] questionNumbers) value)
     {
         return new RawReadFiles(value.questionsWithAnswers, value.correctAnswers, value.questionNumbers);
+    }
+}
+public record struct RawReadFiles2(string[] questionsWithAnswers, string[] correctAnswers, string[] questionNumbers)
+{
+    public static implicit operator (string[] questionsWithAnswers, string[] correctAnswers, string[] questionNumbers)(RawReadFiles2 value)
+    {
+        return (value.questionsWithAnswers, value.correctAnswers, value.questionNumbers);
+    }
+    public static implicit operator RawReadFiles2((string[] questionsWithAnswers, string[] correctAnswers, string[] questionNumbers) value)
+    {
+        return new RawReadFiles2(value.questionsWithAnswers, value.correctAnswers, value.questionNumbers);
     }
 }

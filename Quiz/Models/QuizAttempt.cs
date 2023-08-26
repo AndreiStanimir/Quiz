@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,6 +28,9 @@ namespace Quiz.Models
         public QuizAttempt(Quiz quiz)
         {
             Quiz = quiz;
+            userPassed = numberCorrectAnswers >= 3;
         }
+        [ObservableProperty]
+        private bool userPassed;        
     }
 }
