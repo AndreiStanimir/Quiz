@@ -1,0 +1,21 @@
+name: Android Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x' # Adjust this to your project's .NET version
+    - run: dotnet restore
+    - run: dotnet build Quiz/Platforms/Android/ -c Release --no-restore
