@@ -6,7 +6,8 @@
 		<Nullable>enable</Nullable>
 		<UseMaui>true</UseMaui>
 		<IsPackable>false</IsPackable>
-		<Platforms>AnyCPU;x64</Platforms>
+
+
 	</PropertyGroup>
 
 	<ItemGroup>
