@@ -4,8 +4,9 @@ using Quiz.Models;
 namespace Quiz;
 
 public static class MauiProgram
+
 {
-    public static MauiApp CreateMauiApp()
+    public static MauiApp Main()
     {
         // Document builder pattern 
         var builder = MauiApp.CreateBuilder();

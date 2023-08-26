@@ -10,11 +10,9 @@ namespace Quiz.Models
     {
         static QuizContext quizContext = null;
 
-        public static async Task<QuizContext> GetContextAsync()
+        public static QuizContext GetContext()
         {
-            if (quizContext is not null) return quizContext;
-            quizContext = new QuizContext();
-            await quizContext.PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
+            quizContext ??= new QuizContext();
             return quizContext;
         }
 

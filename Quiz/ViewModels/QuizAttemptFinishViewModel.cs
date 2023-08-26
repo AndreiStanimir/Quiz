@@ -13,9 +13,9 @@ namespace Quiz.ViewModels
         [ObservableProperty]
         private QuizAttempt quizAttempt;
         private QuizContext context;
-        public QuizAttemptFinishViewModel(QuizContext context)
+        public QuizAttemptFinishViewModel()
         {
-            this.context = context;
+            context = QuizContextFactory.GetContext();
             quizAttempt = context.QuizAttempts.First();
         }
         public QuizAttemptFinishViewModel(QuizAttempt quizAttempt)

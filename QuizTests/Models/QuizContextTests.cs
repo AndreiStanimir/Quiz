@@ -35,11 +35,11 @@ namespace Quiz.Models.Tests
                 Assert.NotNull(quiz);
                 Assert.NotNull(quiz.Questions);
                 Assert.True(quiz.Questions.All(q => q.Answers.Count >= 3));
-                Assert.AreEqual(5, quiz.Questions.Count);
+                Assert.AreEqual(100, quiz.Questions.Count);
             }
         }
 
-        [Test,Ignore("Not aplicable")]
+        [Test]
         public void AllQuestionsHaveAtLeastOneQuiz()
         {
             Assert.IsNotEmpty(quizContext.Questions);

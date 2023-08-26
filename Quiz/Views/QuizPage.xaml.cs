@@ -53,7 +53,7 @@ public partial class QuizPage : ContentPage
         if (gameEnded)
         {
             Navigation.PopAsync();
-            Navigation.PushAsync(new QuizAttemptFinalPage(new QuizAttemptFinishViewModel(context)));
+            Navigation.PushAsync(new QuizAttemptFinalPage(new QuizAttemptFinishViewModel()));
         };
         var question = ViewModel.CurrentQuestion;
         //LabelQuestion.Text = question.Text;

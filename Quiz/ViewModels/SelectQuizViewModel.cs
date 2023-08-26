@@ -21,9 +21,9 @@ namespace Quiz.ViewModels
         public ObservableCollection<QuizAttempt> attempts;
         public SelectQuizViewModel()
         {
-            this.quizContext = QuizContextFactory.GetContextAsync().Result;
+            quizContext = QuizContextFactory.GetContext();
             quizzes = quizContext.Quizzes.ToObservableCollection();
-            //var currentUser = UserService.GetCurrentUserAsync(this.quizContext);
+            var currentUser = UserService.GetCurrentUser();
             foreach (var quiz in quizzes)
             {
                 quiz.BestAttempt = quizContext.QuizAttempts
