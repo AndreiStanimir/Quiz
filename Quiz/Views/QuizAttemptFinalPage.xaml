@@ -44,7 +44,7 @@
                                                Text="✓"
                                                IsVisible="{Binding Correct}" />
                                                 <Label FontSize="Medium"
-                                               Text="{Binding FullText,StringFormat='• {0}'}" />
+                                               Text="{Binding Text,StringFormat='• {0}'}" />
                                             </HorizontalStackLayout>
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
