@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -26,7 +27,7 @@ namespace Quiz.Models
         private int numberCorrectAnswers;
 
         [ObservableProperty]
-        private List<WrongQuestion> wrongQuestions = new();
+        private ObservableCollection<WrongQuestion> wrongQuestions = new();
 
         public QuizAttempt()
         {

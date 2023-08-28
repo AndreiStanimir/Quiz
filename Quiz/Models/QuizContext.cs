@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CommunityToolkit.Maui.Core.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -138,7 +139,7 @@ public class QuizContext : DbContext
         {
             DateTime = DateTime.Now,
 
-            WrongQuestions = Quizzes.First().Questions.Take(5).Select(q => new WrongQuestion(q, q.Answers.Where(x => !x.Correct).ToList())).ToList(),
+            WrongQuestions = Quizzes.First().Questions.Take(5).Select(q => new WrongQuestion(q, q.Answers.Where(x => !x.Correct).ToList())).ToObservableCollection(),
             NumberCorrectAnswers = 0,
             Quiz = Quizzes.First(),
         });
