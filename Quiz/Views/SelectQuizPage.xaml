@@ -17,21 +17,29 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <HorizontalStackLayout>
+                        <!-- Quiz Name -->
                         <Label
                             FontSize="Large"
                             Text="{x:Binding QuizName}"
                             AutomationId="{x:Binding QuizName}"
                             Margin="20,20,20,20" 
                             VerticalOptions="Center"/>
+
+                        <!-- Correct Answers -->
                         <Label
                             VerticalOptions="Center"
                             HorizontalOptions="End"
-                            FontSize="Large"
-                            TextColor="GreenYellow"
-                            Text="12"
-                        />
-                        <!--Text="{x:Binding BestAttempt.NumberCorrectAnswers}"-->
+                            FontSize="Medium"
+                            TextColor="Green"
+                            Text="{x:Binding NumberCorrectAnswers, StringFormat='{0} Correct'}"/>
 
+                        <!-- Incorrect Answers -->
+                        <Label
+                            VerticalOptions="Center"
+                            HorizontalOptions="End"
+                            FontSize="Medium"
+                            TextColor="Red"
+                            Text="{x:Binding NumberIncorrectAnswers, StringFormat='{0} Incorrect'}"/>
                     </HorizontalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

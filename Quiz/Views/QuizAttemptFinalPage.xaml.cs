@@ -27,4 +27,11 @@ public partial class QuizAttemptFinalPage : ContentPage
             labelPassedExam.TextColor = Color.Parse("red");
         }
     }
+
+    private void ReturnToSelectQuizButton_Clicked(object sender, EventArgs e)
+    {
+        Navigation.PopAsync();
+        if (Navigation.NavigationStack.Last() is not SelectQuizPage)
+            Navigation.PushAsync(new SelectQuizPage());
+    }
 }

@@ -25,7 +25,10 @@
                FontSize="Medium"
                HorizontalOptions="CenterAndExpand"
                TextColor="Black"/>
-
+        <Button Text="Return to Select Quiz"
+            HorizontalOptions="CenterAndExpand"
+            VerticalOptions="EndAndExpand"
+            Clicked="ReturnToSelectQuizButton_Clicked"/>
         <ScrollView>
             <CollectionView ItemsSource="{Binding QuizAttempt.WrongQuestions}">
                 <CollectionView.ItemTemplate>
