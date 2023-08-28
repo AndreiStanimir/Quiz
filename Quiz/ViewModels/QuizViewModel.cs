@@ -23,10 +23,11 @@ namespace Quiz.ViewModels
         private Quiz.Models.Quiz quiz;
         public QuizAttempt quizAttempt { get; private set; }
         //inject quizcontext using dependency injection
-        public QuizViewModel()
+        public QuizViewModel(int id)
         {
             this.quizContext = QuizContextFactory.GetContext();
-            quiz = quizContext.Quizzes.First();
+            quiz = quizContext.Quizzes.Find(id);
+            quizAttempt = new QuizAttempt(quiz);
             questions = quiz.Questions.ToArray();
             questionsEnumerator = questions.GetEnumerator();
             GetNextQuestion();
@@ -35,7 +36,6 @@ namespace Quiz.ViewModels
 
         public void SetQuiz(int id)
         {
-            quizContext = QuizContextFactory.GetContext();
             quiz = quizContext.Quizzes.Find(id);
         }
 
@@ -49,7 +49,8 @@ namespace Quiz.ViewModels
                 {
                     NumberCorrectAnswers = CorrectAnswers,
                     DateTime = DateTime.Now,
-                    User=UserService.GetCurrentUser(),
+                    User = UserService.GetCurrentUser(),
+                    WrongQuestions = quizAttempt.WrongQuestions
                 };
                 quizContext.QuizAttempts.Add(quizAttempt);
                 quizContext.SaveChanges();
@@ -64,16 +65,16 @@ namespace Quiz.ViewModels
         internal bool DidUserAnswerCorrectly(IEnumerable<Answer> answers)
         {
             Debug.Assert(answers != null);
-            Debug.Assert(this.currentQuestion?.CorrectAnswers != null);
+            Debug.Assert(CurrentQuestion?.CorrectAnswers != null);
             //if (answers.SequenceEqual(this.currentQuestion.CorrectAnswers))
-            if (answers.Count() == this.currentQuestion.CorrectAnswers.Count())
+            if (answers.Count() == CurrentQuestion.CorrectAnswers.Count())
                 if (answers.All(a => a.Correct))
                 //if (this.currentQuestion.CorrectAnswers.All(a => answers.FirstOrDefault(answerFromUser => a.AnswerId == answerFromUser.AnswerId) != default))
                 {
                     CorrectAnswers++;
                     return true;
                 }
-
+            quizAttempt.WrongQuestions.Add(new(CurrentQuestion, answers.ToList()));
             return false;
         }
     }

@@ -8,8 +8,12 @@ using System.Threading.Tasks;
 
 namespace Quiz.Models
 {
-    public partial class QuizAttempt : ObservableObject
+    public partial class QuizAttempt : ObservableObject, IComparable<QuizAttempt>
     {
+        public int CompareTo(QuizAttempt other)
+        {
+            return DateTime.CompareTo(other.DateTime);
+        }
         public int Id { get; set; }
 
         [Required]
@@ -21,9 +25,11 @@ namespace Quiz.Models
         [ObservableProperty]
         private int numberCorrectAnswers;
 
+        [ObservableProperty]
+        private List<WrongQuestion> wrongQuestions = new();
+
         public QuizAttempt()
         {
-
         }
         public QuizAttempt(Quiz quiz)
         {
@@ -31,6 +37,7 @@ namespace Quiz.Models
             userPassed = numberCorrectAnswers >= 3;
         }
         [ObservableProperty]
-        private bool userPassed;        
+        private bool userPassed;
+        
     }
 }

@@ -13,11 +13,6 @@ namespace Quiz.ViewModels
         [ObservableProperty]
         private QuizAttempt quizAttempt;
         private QuizContext context;
-        public QuizAttemptFinishViewModel()
-        {
-            context = QuizContextFactory.GetContext();
-            quizAttempt = context.QuizAttempts.First();
-        }
         public QuizAttemptFinishViewModel(QuizAttempt quizAttempt)
         {
             this.quizAttempt = quizAttempt;
@@ -25,7 +20,7 @@ namespace Quiz.ViewModels
 
         public bool DidUserPass()
         {
-            return quizAttempt.NumberCorrectAnswers >= 3;
+            return QuizAttempt.NumberCorrectAnswers >= 3;
         }
     }
 }

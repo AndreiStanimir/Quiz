@@ -139,6 +139,48 @@ namespace Quiz.Models.Tests
             // Assuming 0 to 10000 is the valid range
             Assert.That(quizContext.Questions.All(q => q.Number >= 0 && q.Number <= 10000));
         }
+        [Test]
+        public void AllQuizzesHaveAtLeastOneQuestion()
+        {
+            Assert.That(quizContext.Quizzes.All(quiz => quiz.Questions.Any()));
+            foreach(Quiz q in quizContext.Quizzes)
+            {
+                Assert.That(q.Questions.Any());
+            }
+        }
+        
+        //write a test that check one quiz has atleast one question
+        [Test]
+        public void AtleastOneQuizHasAtleastOneQuestion()
+        {
+            Assert.That(quizContext.Quizzes.Any(quiz => quiz.Id == 1 && quiz.Questions.Count() >= 1));
+        }
+        //write a test that check one question has atleast one answer
+        [Test]
+        public void AtleastOneQuestionHasAtleastOneAnswer()
+        {
+            Assert.That(quizContext.Questions.Any(question => question.Id == 1 && question.Answers.Count() >= 1));
+        }
+        //write a test that check one question has atleast one correct answer
+        [Test]
+        public void AtleastOneQuestionHasAtleastOneCorrectAnswer()
+        {
+            Assert.That(quizContext.Questions.Any(question => question.Id == 1 && question.CorrectAnswers.Count() >= 1));
+        }
+        //write a test that check one question has atleast one quiz
+        [Test]
+        public void AtleastOneQuestionHasAtleastOneQuiz()
+        {
+            Assert.That(quizContext.Questions.Any(question => question.Id == 1 && question.Quizzes.Count() >= 1));
+        }
+        //write a test that check one answer has atleast one question
+        [Test]
+        public void AtleastOneQuizHasAtleastOneQuestion2()
+        {
+            Assert.That(quizContext.Quizzes.Any(quiz => quiz.Id == 1 && quiz.Questions.Count() >= 1));
+        }
+        //write a test that check one quiz has atleast one correct question
+                
         public class QuestionEqualityComparer : IEqualityComparer<Question>
         {
             public bool Equals(Question? x, Question? y)

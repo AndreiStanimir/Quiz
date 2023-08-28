@@ -41,8 +41,7 @@ public partial class QuizPage : ContentPage
     public QuizPage(int id)
     {
         InitializeComponent();
-        BindingContext = ViewModel = new QuizViewModel();
-        ViewModel.SetQuiz(id);
+        BindingContext = ViewModel = new QuizViewModel(id);
     }
 
     void GetNextQuestion()

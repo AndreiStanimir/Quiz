@@ -41,5 +41,30 @@ namespace Quiz.Models
             this.answers = answers;
             CorrectAnswers = Answers.Where(a => a.Correct).ToList();
         }
+        // generate copy constructor for Question
+        public Question(Question question)
+        {
+            text = question.Text;
+            answers = question.Answers;
+            Number = question.Number;
+            CorrectAnswers = question.CorrectAnswers;
+        }
+        public override bool Equals(object obj)
+        {
+            return obj is Question question &&
+                   Id == question.Id &&
+                   text == question.text &&
+                   EqualityComparer<ObservableCollection<Answer>>.Default.Equals(answers, question.answers) &&
+                   EqualityComparer<IEnumerable<Answer>>.Default.Equals(CorrectAnswers, question.CorrectAnswers) &&
+                   Number == question.Number;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, text, answers, CorrectAnswers, Number);
+        }
+        public override string ToString()
+        {
+            return $"{Number}. {Text}";
+        }        // generate copy constructor for Question
     }
 }

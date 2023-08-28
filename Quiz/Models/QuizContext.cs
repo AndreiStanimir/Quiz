@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Quiz.Models;
@@ -44,10 +45,10 @@ public class QuizContext : DbContext
         //var folder = Environment.SpecialFolder.LocalApplicationData;
         //var path = Environment.GetFolderPath(folder);
         DbPath = @"C:\Users\andre\source\repos\AndreiStanimir\Quiz\QuizTests\Resources\quizzes.db";
-        //Database.EnsureDeleted();
-        //Database.EnsureCreated();
-        //PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
-        
+        Database.EnsureDeleted();
+        Database.EnsureCreated();
+        PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
+
         //if(!File.Exists(DbPath))
         //PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
         //SaveChanges();
@@ -95,7 +96,7 @@ public class QuizContext : DbContext
             var questionAnswers = questionWithAnswerSplit.Skip(1)
                 .Select(a => Regex.Replace(a.Trim(), "^ *[a-d]\\.", "", RegexOptions.Compiled))
                 .ToArray();
-            List<Answer> answers=new List<Answer>();
+            List<Answer> answers = new List<Answer>();
             for (int i = 0; i < questionAnswers.Count(); i++)
             {
                 char currentAnswerLetter = (char)('a' + i);
@@ -107,7 +108,7 @@ public class QuizContext : DbContext
                 }
                 );
             }
-                
+
             Question question = new Question(new System.Collections.ObjectModel.ObservableCollection<Answer>(answers))
             {
                 //Id = id.ToString(),
@@ -123,8 +124,9 @@ public class QuizContext : DbContext
         SaveChanges();
         var quizes = GenerateQuizzes(Questions.ToList(), numberOfQuizes);
         Quizzes.AddRange(quizes);
+        Questions.AddRange(Quizzes.Select(q => q.Questions).SelectMany(x => x));
         SaveChanges();
-        
+
         //Questions.ForEachAsync(q =>
         //{
         //    Quizzes.Where(quiz => q.Id == quiz.Id)
@@ -132,6 +134,14 @@ public class QuizContext : DbContext
         //        q.Quizzes.Add(quiz));
         //}
         //);
+        QuizAttempts.Add(new QuizAttempt()
+        {
+            DateTime = DateTime.Now,
+
+            WrongQuestions = Quizzes.First().Questions.Take(5).Select(q => new WrongQuestion(q, q.Answers.Where(x => !x.Correct).ToList())).ToList(),
+            NumberCorrectAnswers = 0,
+            Quiz = Quizzes.First(),
+        });
         this.SaveChanges();
         this.BulkSaveChanges();
     }
