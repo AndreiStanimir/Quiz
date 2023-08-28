@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/QuizTests/Resources/quizzes.db
+/QuizTests/Resources/quizzes.db-shm
+/QuizTests/Resources/quizzes.db-wal
