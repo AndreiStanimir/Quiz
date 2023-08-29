@@ -36,24 +36,44 @@
                         <StackLayout Spacing="10">
                             <!-- Display the question text -->
                             <Label Text="{Binding Text}"
-                                   FontSize="Medium"
-                                   TextColor="DarkRed"/>
+                           FontSize="Medium"
+                           TextColor="DarkRed"/>
 
                             <!-- Display the answers for the question -->
-                            <ListView ItemsSource="{Binding Answers}">
-                                <ListView.ItemTemplate>
+                            <CollectionView 
+     VerticalScrollBarVisibility="Always"
+     x:Name="listViewAnswers"
+     ItemsSource="{x:Binding Answers}"
+     
+     SelectionMode="Multiple">
+                                <CollectionView.ItemTemplate >
                                     <DataTemplate x:DataType="models:Answer">
-                                        <StackLayout Orientation="Horizontal">
-                                            <Label Text="{Binding Correct, Converter={StaticResource BoolToIconConverter}}"
-                                                   FontSize="Medium"
-                                                   TextColor="Green"/>
-                                            <Label Text="{Binding FullText}"
-                                                   FontSize="Small"
-                                                   TextColor="Black"/>
-                                        </StackLayout>
+                                        <HorizontalStackLayout>
+                                            <Label  FontSize="Medium"
+                         Text="✓"
+                         IsVisible="{x:Binding Correct}" />
+                                            <Label FontSize="Medium"
+                    Text="{x:Binding Text,StringFormat='• {0}'}">
+                                                <!--<VisualStateManager.VisualStateGroups>
+                     <VisualStateGroup x:Name="CommonStates">
+                         <VisualState x:Name="ToggledOff">
+                             <VisualState.Setters>
+                                 <Setter Property="Background" Value="DarkSalmon" />
+                             </VisualState.Setters>
+                         </VisualState>
+                         <VisualState x:Name="ToggledOn">
+                             <VisualState.Setters>
+                                 <Setter Property="Background" Value="green" />
+                             </VisualState.Setters>
+                         </VisualState>
+                     </VisualStateGroup>
+                 </VisualStateManager.VisualStateGroups>-->
+                                            </Label>
+                                        </HorizontalStackLayout>
                                     </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
