@@ -30,9 +30,9 @@
             VerticalOptions="EndAndExpand"
             Clicked="ReturnToSelectQuizButton_Clicked"/>
         <ScrollView>
-            <CollectionView ItemsSource="{Binding QuizAttempt.WrongQuestions}">
+            <CollectionView ItemsSource="{Binding QuizAttempt.Quiz.Questions}">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:WrongQuestion">
+                    <DataTemplate x:DataType="models:Question">
                         <StackLayout Spacing="10">
                             <!-- Display the question text -->
                             <Label Text="{Binding Text}"

@@ -28,7 +28,8 @@ namespace Quiz.Models
 
         [ObservableProperty]
         private ObservableCollection<WrongQuestion> wrongQuestions = new();
-
+        [ObservableProperty]
+        private ObservableCollection<Question> rightAnswers = new();
         public QuizAttempt()
         {
         }
@@ -39,6 +40,6 @@ namespace Quiz.Models
         }
         [ObservableProperty]
         private bool userPassed;
-        
+
     }
 }
