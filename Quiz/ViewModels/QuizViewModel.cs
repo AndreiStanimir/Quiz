@@ -52,6 +52,8 @@ namespace Quiz.ViewModels
                     User = UserService.GetCurrentUser(),
                     WrongQuestions = quizAttempt.WrongQuestions
                 };
+                if (quiz.BestAttempt is null || quiz.BestAttempt.WrongQuestions.Count > quizAttempt.WrongQuestions.Count)
+                    quiz.BestAttempt = quizAttempt;
                 quizContext.QuizAttempts.Add(quizAttempt);
                 quizContext.SaveChanges();
                 return false;

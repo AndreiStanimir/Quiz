@@ -45,7 +45,7 @@ public class QuizContext : DbContext
     {
         //var folder = Environment.SpecialFolder.LocalApplicationData;
         //var path = Environment.GetFolderPath(folder);
-        DbPath = @"C:\Users\andre\source\repos\AndreiStanimir\Quiz\QuizTests\Resources\quizzes.db";
+        DbPath = @"C:\Users\andrei.stanimir\Source\Repos\AndreiStanimir\Quiz\QuizTests\Resources\quizzes.db";
         Database.EnsureDeleted();
         Database.EnsureCreated();
         PopulateDB(@"Questions.txt", @"GoodAnswers.txt", 15);
@@ -135,14 +135,15 @@ public class QuizContext : DbContext
         //        q.Quizzes.Add(quiz));
         //}
         //);
-        QuizAttempts.Add(new QuizAttempt()
+        QuizAttempt attempt = new QuizAttempt(Quizzes.First())
         {
             DateTime = DateTime.Now,
 
             WrongQuestions = Quizzes.First().Questions.Take(5).Select(q => new WrongQuestion(q, q.Answers.Where(x => !x.Correct).ToList())).ToObservableCollection(),
             NumberCorrectAnswers = 0,
-            Quiz = Quizzes.First(),
-        });
+        };
+        QuizAttempts.Add(attempt);
+        Quizzes.First().BestAttempt = attempt;
         this.SaveChanges();
         this.BulkSaveChanges();
     }

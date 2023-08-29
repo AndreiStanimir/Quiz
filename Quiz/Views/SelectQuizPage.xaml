@@ -31,7 +31,7 @@
                             HorizontalOptions="End"
                             FontSize="Medium"
                             TextColor="Green"
-                            Text="{x:Binding NumberCorrectAnswers, StringFormat='{0} Correct'}"/>
+                            Text="{x:Binding BestAttempt.NumberCorrectAnswers, StringFormat='{0} Correct'}"/>
 
                         <!-- Incorrect Answers -->
                         <Label
@@ -39,7 +39,7 @@
                             HorizontalOptions="End"
                             FontSize="Medium"
                             TextColor="Red"
-                            Text="{x:Binding NumberIncorrectAnswers, StringFormat='{0} Incorrect'}"/>
+                            Text="{x:Binding BestAttempt.WrongQuestions.Count, StringFormat='{0} Incorrect'}"/>
                     </HorizontalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
